@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="StyleSheet" href="../css/jpetstore.css" type="text/css" media="screen"/>
+</head>
+<body>
+<div th:replace="common/top">
+
+</div>
+<div id="Content">
+    <div id="Catalog">
+
+        <!--/*@thymesVar id="name" type=""*/-->
+        <h2 th:text="${category.name}">CategoryName</h2>
+
+        <table>
+            <tr>
+                <th>Product ID</th>
+                <th>Name</th>
+            </tr>
+            <tr th:each="product:${productList}">
+                <td th:text="${product.productId}">productId</td>
+                <td th:text="${product.name}">Product Name</td>
+            </tr>
+<!--            <c:forEach var="product" items="${sessionScope.productList}">-->
+<!--                <tr>-->
+<!--                    <td>-->
+<!--                        <a href="viewProduct?productId=${product.productId}"> ${product.productId} </a>-->
+<!--                    </td>-->
+
+<!--                    <td>${product.name}</td>-->
+<!--                </tr>-->
+<!--            </c:forEach>-->
+        </table>
+
+    </div>
+</div>
+
+<div th:replace="common/bottom">
+
+</div>
+</body>
+</html>
