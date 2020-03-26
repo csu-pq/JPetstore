@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -14,18 +15,30 @@
 
     <div id="Catalog">
 
-        <h2 th:text="${category.name}">Category Name</h2>
-
         <table>
             <tr>
+                <th>&nbsp;</th>
                 <th>Product ID</th>
                 <th>Name</th>
             </tr>
 
             <tr th:each="product:${productList}">
-                <td><a th:href="@{/catalog/viewProduct?productId=}+${product.productId}" th:text="${product.productId}">Product ID</a></td>
-                <td th:text="${product.name}">Product Name</td>
+                <td>
+                    <label><img th:src="${product.descriptionImage}"></label>
+                    <label th:text="${product.descriptionText}"></label>
+                </td>
+                <td>
+                    <b>
+                        <a th:href="'/catalog/viewProduct?productId='+${product.productId}" >
+                            <font color="BLACK" th:text="${product.productId}">Product ID</font>
+                        </a>
+                    </b>
+                </td>
+                <td th:text="${product.name}">
+                    Product Name
+                </td>
             </tr>
+
         </table>
     </div>
 </div>
