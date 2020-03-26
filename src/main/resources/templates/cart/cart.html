@@ -31,22 +31,22 @@
                     <td colspan="8"><b>Your cart is empty.</b></td>
                 </tr>
 
-                <tr th:each="cartItem:${cart.cartItems}">
-                    <td>
-                        <a th:href="'/catalog/viewItem?itemId='+${cartItem.item.itemId}" th:text="${cartItem.item.itemId}"></a>
-                    </td>
-                    <td th:text="${cartItem.item.product.productId}"></td>
-                    <td th:text="${cartItem.item.attribute1}+${cartItem.item.product.name}"></td>
-                    <td th:text="${cartItem.inStock}"></td>
-                    <td>
-                        <input type="text" th:name="${cartItem.item.itemId}" th:value="${cartItem.quantity}">
-                    </td>
-                    <td th:text="'$'+${#numbers.formatDecimal(cartItem.item.listPrice,1,2)}"></td>
-                    <td th:text="'$'+${#numbers.formatDecimal(cartItem.total,1,2)}"></td>
-                    <td>
-                        <a class="Button" th:href="'/cart/removeItemFromCart?workingItemId='+${cartItem.item.itemId}">Remove</a>
-                    </td>
-                </tr>
+<!--                <tr th:each="cartItem:${cart.cartItems}">-->
+<!--                    <td>-->
+<!--                        <a th:href="'/catalog/viewItem?itemId='+${cartItem.item.itemId}" th:text="${cartItem.item.itemId}"></a>-->
+<!--                    </td>-->
+<!--                    <td th:text="${cartItem.item.product.productId}"></td>-->
+<!--                    <td th:text="${cartItem.item.attribute1}+${cartItem.item.product.name}"></td>-->
+<!--                    <td th:text="${cartItem.inStock}"></td>-->
+<!--                    <td>-->
+<!--                        <input type="text" th:name="${cartItem.item.itemId}" th:value="${cartItem.quantity}">-->
+<!--                    </td>-->
+<!--                    <td th:text="'$'+${#numbers.formatDecimal(cartItem.item.listPrice,1,2)}"></td>-->
+<!--                    <td th:text="'$'+${#numbers.formatDecimal(cartItem.total,1,2)}"></td>-->
+<!--                    <td>-->
+<!--                        <a class="Button" th:href="'/cart/removeItemFromCart?workingItemId='+${cartItem.item.itemId}">Remove</a>-->
+<!--                    </td>-->
+<!--                </tr>-->
 
                 <tr>
                     <td colspan="7">
