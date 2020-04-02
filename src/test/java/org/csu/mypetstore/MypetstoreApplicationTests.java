@@ -1,9 +1,11 @@
 package org.csu.mypetstore;
 
+import org.csu.mypetstore.domain.Account;
 import org.csu.mypetstore.domain.Category;
 import org.csu.mypetstore.domain.Item;
 import org.csu.mypetstore.domain.Product;
 import org.csu.mypetstore.service.CatalogService;
+import org.csu.mypetstore.service.AccountService;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +18,12 @@ import java.util.List;
 class MypetstoreApplicationTests {
     @Autowired
     private CatalogService catalogService;
+    @Autowired
+    private AccountService accountService;
 
     @Test
     void contextLoads() {
     }
-
-
 
     @Test
     void testCategory(){
@@ -71,6 +73,9 @@ class MypetstoreApplicationTests {
                 item.getUnitCost()+","+item.getSupplierId()+","+item.getStatus()+","+item.getQuantity());
     }
 
-
+@Test
+    void testAccountMapper(){
+    Account account= AccountService.
+}
 
 }
