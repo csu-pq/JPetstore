@@ -77,8 +77,10 @@ class MypetstoreApplicationTests {
 
     @Test
     void testAccount(){
-        Account a = accountService.getAccount("a");
+        //查询账户
+        Account a = accountService.getAccount("j2ee");
         System.out.println(a.getEmail()+","+a.getPassword()+","+a.getAddress1());
+        //新建账户
         Account temp = a;
         temp.setUsername("xyz");
         temp.setPassword("zyx");
