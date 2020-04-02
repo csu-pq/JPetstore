@@ -1,4 +1,4 @@
-package org.csu.mypetstore.persistence.service;
+package org.csu.mypetstore.service;
 
 import org.csu.mypetstore.domain.Category;
 import org.csu.mypetstore.domain.Product;
