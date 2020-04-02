@@ -1,11 +1,6 @@
 package org.csu.mypetstore.domain;
 
-import java.io.Serializable;
-
-public class Account implements Serializable {
-
-    private static final long serialVersionUID = 8751282105532159742L;
-
+public class Account {
     private String username;
     private String password;
     private String email;
@@ -53,7 +48,6 @@ public class Account implements Serializable {
         return firstName;
     }
 
-    //@Validate(required=true, on={"newAccount", "editAccount"})
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -62,7 +56,6 @@ public class Account implements Serializable {
         return lastName;
     }
 
-    //@Validate(required=true, on={"newAccount", "editAccount"})
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
@@ -170,6 +163,4 @@ public class Account implements Serializable {
     public void setBannerName(String bannerName) {
         this.bannerName = bannerName;
     }
-
 }
-

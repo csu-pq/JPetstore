@@ -4,8 +4,8 @@ import org.csu.mypetstore.domain.Account;
 import org.csu.mypetstore.domain.Category;
 import org.csu.mypetstore.domain.Item;
 import org.csu.mypetstore.domain.Product;
-import org.csu.mypetstore.service.CatalogService;
 import org.csu.mypetstore.service.AccountService;
+import org.csu.mypetstore.service.CatalogService;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +24,8 @@ class MypetstoreApplicationTests {
     @Test
     void contextLoads() {
     }
+
+
 
     @Test
     void testCategory(){
@@ -73,9 +75,20 @@ class MypetstoreApplicationTests {
                 item.getUnitCost()+","+item.getSupplierId()+","+item.getStatus()+","+item.getQuantity());
     }
 
-@Test
-    void testAccountMapper(){
-    Account account= AccountService.
-}
+    @Test
+    void testAccount(){
+        Account a = accountService.getAccount("a");
+        System.out.println(a.getEmail()+","+a.getPassword()+","+a.getAddress1());
+        Account temp = a;
+        temp.setUsername("xyz");
+        temp.setPassword("zyx");
+        accountService.insertAccount(temp);
+
+        temp.setPassword("xyz");
+        temp.setEmail("xyz@csu.edu.cn");
+        accountService.updateAccount(temp);
+    }
+
+
 
 }

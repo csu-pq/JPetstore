@@ -23,6 +23,9 @@ public class AccountService {
         return accountMapper.getAccountByUsernameAndPassword(account);
     }
 
+    /*
+        声明式事务处理
+     */
     @Transactional
     public void insertAccount(Account account){
         accountMapper.insertAccount(account);

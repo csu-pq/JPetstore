@@ -2,11 +2,9 @@ package org.csu.mypetstore.persistence;
 
 import org.csu.mypetstore.domain.Account;
 import org.springframework.stereotype.Repository;
-import org.apache.ibatis.annotations.Mapper;
-@Repository
-@Mapper
-public interface AccountMapper {
 
+@Repository
+public interface AccountMapper {
     Account getAccountByUsername(String username);
 
     Account getAccountByUsernameAndPassword(Account account);
@@ -17,9 +15,12 @@ public interface AccountMapper {
 
     void insertSignon(Account account);
 
+
     void updateAccount(Account account);
 
     void updateProfile(Account account);
 
     void updateSignon(Account account);
+
+
 }
