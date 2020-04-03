@@ -10,6 +10,29 @@ public class CartItem implements Serializable {
     private int quantity;
     private boolean inStock;
     private BigDecimal total;
+    private String itemId;
+    private String cartId;
+    private String categoryId;
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
+    }
+
+    public String getCartId() {
+        return cartId;
+    }
+
+    public void setCartId(String cartId) {
+        this.cartId = cartId;
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
 
     public CartItem(){
     }
@@ -61,5 +84,8 @@ public class CartItem implements Serializable {
         } else {
             total = null;
         }
+    }
+    public String getItemId() {
+        return itemId;
     }
 }

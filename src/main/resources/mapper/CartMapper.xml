@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.csu.mypetstore.persistence.CartMapper">
+    <select id="getCartByUsername"  resultType="Cart">
+        SELECT
+            CARTID,
+            USERNAME
+        FROM CART
+        WHERE USERNAME = #{username}
+    </select>
+
+    <insert id="addCart" >
+        INSERT
+        INTO CART
+            (USERNAME)
+        VALUES
+            (#{username})
+    </insert>
+
+    <delete id="deleteCart" >
+            DELETE
+            FROM CART
+            WHERE
+                USERNAME = #{username}
+    </delete>
+
+</mapper>

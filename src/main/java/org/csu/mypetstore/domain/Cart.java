@@ -11,6 +11,15 @@ public class Cart implements Serializable {
     private static final long serialVersionUID = 8329559983943337176L;
     private final Map<String, CartItem> itemMap = Collections.synchronizedMap(new HashMap());
     private final List<CartItem> itemList;
+    private String cartId;
+
+    public String getCartId() {
+        return cartId;
+    }
+
+    public void setCartId(String cartId) {
+        this.cartId = cartId;
+    }
 
     {
         itemList = new ArrayList();
