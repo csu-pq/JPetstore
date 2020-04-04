@@ -1,10 +1,8 @@
 package org.csu.mypetstore;
 
-import org.csu.mypetstore.domain.Account;
-import org.csu.mypetstore.domain.Category;
-import org.csu.mypetstore.domain.Item;
-import org.csu.mypetstore.domain.Product;
+import org.csu.mypetstore.domain.*;
 import org.csu.mypetstore.service.AccountService;
+import org.csu.mypetstore.service.CartService;
 import org.csu.mypetstore.service.CatalogService;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.annotation.MapperScan;
@@ -20,6 +18,8 @@ class MypetstoreApplicationTests {
     private CatalogService catalogService;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private CartService cartService;
 
     @Test
     void contextLoads() {
@@ -82,13 +82,19 @@ class MypetstoreApplicationTests {
         System.out.println(a.getEmail()+","+a.getPassword()+","+a.getAddress1());
         //新建账户
         Account temp = a;
-        temp.setUsername("xyz");
+        temp.setUsername("ab");
         temp.setPassword("zyx");
         accountService.insertAccount(temp);
-
-        temp.setPassword("xyz");
+        temp.setPassword("1");
         temp.setEmail("xyz@csu.edu.cn");
         accountService.updateAccount(temp);
+    }
+    @Test
+    void testCartItem()
+    {
+        cartService.addItem("1000","EST-1");
+        CartItem cartItem = cartService.getCartItem("1000","EST-1");
+        System.out.println(cartItem.getCartId()+", "+cartItem.getCategoryId()+","+cartItem.getItem().getProductId()+","+cartItem.getItemId()+", "+cartItem.getQuantity());
     }
 
 

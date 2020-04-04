@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.csu.mypetstore.persistence.CartItemMapper">
+    <select id="getCartItemList"  resultType="CartItem">
+        SELECT
+            CI.CARTID,
+            CI.ITEMID,
+            CI.CATEGORYID,
+            CI.QUANTITY,
+            I.ITEMID AS "item.itemId",
+            I.UNITCOST AS "item.unitCost",
+            I.SUPPLIER AS "item.supplierId",
+            I.PRODUCTID AS "item.productId",
+            I.STATUS AS "item.status",
+            I.ATTR1 AS "item.attribute1",
+            I.ATTR2 AS "item.attribute2",
+            I.ATTR3 AS "item.attribute3",
+            I.ATTR4 AS"item. attribute4",
+            I.ATTR5 AS "item.attribute5"
+        FROM CARTITEM CI, ITEM I
+        WHERE CI.CARTID = #{cartId}
+        AND CI.ITEMID = I.ITEMID
+    </select>
+
+    <select id="getCartItem" resultType="CartItem">
+        SELECT
+            CI.CARTID,
+            CI.ITEMID,
+            CI.CATEGORYID,
+            CI.QUANTITY,
+            I.ITEMID AS "item.itemId",
+            I.UNITCOST AS "item.unitCost",
+            I.SUPPLIER AS "item.supplierId",
+            I.PRODUCTID AS "item.productId",
+            I.STATUS AS "item.status",
+            I.ATTR1 AS "item.attribute1",
+            I.ATTR2 AS "item.attribute2",
+            I.ATTR3 AS "item.attribute3",
+            I.ATTR4 AS"item. attribute4",
+            I.ATTR5 AS "item.attribute5"
+        FROM CARTITEM CI, ITEM I
+        WHERE CI.CARTID = #{cartId}
+        AND CI.ITEMID = I.ITEMID
+        AND   CI.ITEMID = #{itemId}
+    </select>
+    <insert id="insertCartItem">
+        INSERT
+        INTO CARTITEM
+            (CARTID, ITEMID,CATEGORYID, QUANTITY)
+        SELECT
+            #{cartId},
+            I.ITEMID,
+            P.CATEGORY AS CATEGORYID,
+            #{quantity}
+        FROM PRODUCT P,ITEM I
+        WHERE P.PRODUCTID = I.PRODUCTID
+        AND I.ITEMID = #{itemId}
+
+    </insert>
+
+    <delete id="deleteCartItem">
+        DELETE
+        FROM CARTITEM
+        WHERE CARTID = #{cartId}
+        AND   ITEMID = #{itemID}
+    </delete>
+
+    <delete id="deleteCartItemByCart">
+        DELETE
+        FROM CARTITEM
+        WHERE
+        CARTID = #{cartId}
+    </delete>
+    <update id="updateQuantity">
+        UPDATE CARTITEM
+        SET
+            QUANTITY = #{quantity}
+        WHERE CARTID = #{cartId}
+         AND   ITEMiD = #{itemId}
+    </update>
+</mapper>

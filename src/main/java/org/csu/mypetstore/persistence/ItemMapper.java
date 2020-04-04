@@ -16,4 +16,10 @@ public interface ItemMapper {
     List<Item> getItemListByProduct(String productId);
 
     Item getItem(String itemId);
+
+    void setItemStatusP(String itemId);
+
+    void setItemStatusN(String itemId);
+
+    void updateInventoryQuantity(String itemId, int quantity);
 }
