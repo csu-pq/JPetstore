@@ -18,11 +18,12 @@
             <div id="MenuContent">
                 <a href="/cart/viewCart"><img align="middle" name="img_cart" src="../images/cart.gif" /></a>
                 <img align="middle" src="../images/separator.gif" />
-                <a href="#">Sign In</a>
-                <img align="middle" src="../images/separator.gif" />
-                <a href="#">Sign Out</a>
-                <img align="middle" src="../images/separator.gif" />
-                <a href="#">My Account</a>
+                <a th:if="${account} == null" href="/account/viewSignOn">Sign In</a>
+                <a th:if="(${account} != null)" href="/account/viewSignOn">Sign In</a>
+                <img th:if="(${account} != null)" align="middle" src="../images/separator.gif" />
+                <a th:if="(${account} != null)" href="/account/signOff">Sign Out</a>
+                <img th:if="(${account} != null)" align="middle" src="../images/separator.gif" />
+                <a th:if="(${account} != null)" href="/account/editAccountForm">My Account</a>
                 <img align="middle" src="../images/separator.gif" />
                 <a href="../help.html">?</a>
             </div>

@@ -78,16 +78,29 @@ class MypetstoreApplicationTests {
     @Test
     void testAccount(){
         //查询账户
-        Account a = accountService.getAccount("j2ee");
-        System.out.println(a.getEmail()+","+a.getPassword()+","+a.getAddress1());
-        //新建账户
-        Account temp = a;
-        temp.setUsername("ab");
-        temp.setPassword("zyx");
-        accountService.insertAccount(temp);
-        temp.setPassword("1");
-        temp.setEmail("xyz@csu.edu.cn");
-        accountService.updateAccount(temp);
+        Account account = accountService.getAccount("j2ee");
+        System.out.println(account.getEmail()+","+account.getPassword()+","+account.getAddress1());
+        //修改账户
+        account.setUsername("abc");
+        account.setPassword("zyx");
+        accountService.updateAccount(account);
+        //新建用户
+        Account new_account=new Account();
+        new_account.setUsername("new");
+        new_account.setPassword("123");
+        new_account.setFirstName("f");
+        new_account.setLastName("l");
+        new_account.setAddress1("ad1");
+        new_account.setAddress2("ad2");
+        new_account.setCity("changsha");
+        new_account.setCountry("China");
+        new_account.setEmail("new@csu.edu.cn");
+        new_account.setState("state");
+        new_account.setPhone("phone");
+        new_account.setZip("zip");
+        new_account.setLanguagePreference("language");
+        new_account.setFavouriteCategoryId("favorite");
+        accountService.insertAccount(new_account);
     }
     @Test
     void testCartItem()
