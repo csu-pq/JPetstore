@@ -32,10 +32,16 @@ public class AccountController {
     }
 
     @PostMapping("/signOn")
-    public String signOn(String username, String password, Model model) {
-        if(username!=null)
+    public String signOn(String username, String password, String code, Model model, HttpSession session) {
+        String rightCode = (String) session.getAttribute("code");
+        Account account=accountService.getAccount(username,password);
+        if(account==null|| !code.equals(rightCode))
         {
-            Account account=accountService.getAccount(username,password);
+            model.addAttribute("msg", "用户名、密码或验证码不正确");
+            return "account/signOnForm";
+        }
+        else
+        {
             if(account!=null)
             {
                 model.addAttribute("account",account);
@@ -46,11 +52,6 @@ public class AccountController {
                 model.addAttribute("msg", "password error");
                 return "account/signOnForm";
             }
-        }
-        else
-        {
-            model.addAttribute("msg", "please enter username and password");
-            return "account/signOnForm";
         }
     }
 

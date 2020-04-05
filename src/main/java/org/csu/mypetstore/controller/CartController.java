@@ -4,6 +4,7 @@ import org.csu.mypetstore.domain.Account;
 import org.csu.mypetstore.domain.Cart;
 import org.csu.mypetstore.domain.CartItem;
 import org.csu.mypetstore.domain.Item;
+import org.csu.mypetstore.service.AccountService;
 import org.csu.mypetstore.service.CartService;
 import org.csu.mypetstore.service.CatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,15 @@ import java.util.List;
 @RequestMapping("/cart/")
 public class CartController {
     @Autowired
+    private AccountService accountService;
+    @Autowired
     private CatalogService catalogService;
     @Autowired
     private CartService cartService;
     @Autowired
     private Cart cart;
+    @Autowired
+
 //进入购物车界面
     @GetMapping("viewCart")
     public String viewCart(@SessionAttribute("account")Account account, Model model){
