@@ -49,6 +49,60 @@ public class OtherController {
             e.printStackTrace();
         }
     }
+    @GetMapping("/usernameIsAvailable")
+    @ResponseBody
+    public String UsernameIsAvailable(String username) {
+        Account account = accountService.getAccountByUsername(username);
+        String json = null;
+        if(username.equals("") || account != null) {
+            json = "{\"msg\":\"不可用\"}";
+        }else {
+            json = "{\"msg\":\"可用\"}";
+        }
+        return json;
+    }
+    @GetMapping("/searchProductUpdate")
+    @ResponseBody
+    public void completeSearch(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String keyword = request.getParameter("keyword");
+        //向server层调用相应的业务
+        List<Product> productList = catalogService.searchProductList(keyword);
+
+        response.setContentType("text/xml");
+        PrintWriter out = response.getWriter();
+
+        //返回结果
+        String res = "";
+        for(int i=0; i<productList.size(); i++){
+            if(i>0){
+                res += "," + productList.get(i).getName();
+            }else{
+                res += productList.get(i).getName();
+            }
+        }
+        out.write(res);
+
+        out.flush();
+        out.close();
+    }
+    @GetMapping("/mouseShow")
+    @ResponseBody
+    public void mouseShow(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String categoryId = request.getParameter("categoryId");
+        System.out.println(categoryId+"             ddddddddd");
+        List<Product> productList = catalogService.getProductListByCategory(categoryId);
+        String resp = "Product ID      Name\n";
+        int i = 0;
+        while(i < productList.size()){
+            Product product = productList.get(i);
+            resp += product.getProductId() + "      " + product.getName() + "\n";
+            i++;
+        }
+
+        response.setContentType("text/xml");
+        PrintWriter out = response.getWriter();
+        out.write(resp);
+    }
 
 
 

@@ -12,6 +12,10 @@ public class AccountService {
     @Autowired
     private AccountMapper accountMapper;
 
+    public Account getAccountByUsername(String username) {
+        return accountMapper.getAccountByUsername(username);
+    }
+
     public Account getAccount(String username){
         return accountMapper.getAccountByUsername(username);
     }
