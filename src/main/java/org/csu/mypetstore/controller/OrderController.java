@@ -27,12 +27,13 @@ public class OrderController {
         return "order/listOrders";
     }
     @GetMapping("/getOrderByOrderId")
-    public String viewOrder(String orderId,Model model)
+    public String viewOrder(@SessionAttribute("account")Account account, String orderId,Model model)
     {
         System.out.println(orderId);
         int intOrderId= Integer.parseInt(orderId);
         Order order=orderService.getOrder(intOrderId);
         model.addAttribute("order",order);
+        model.addAttribute("account",account);
         return "order/viewOrderByOrderId";
     }
 }

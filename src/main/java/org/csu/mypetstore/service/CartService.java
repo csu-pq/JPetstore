@@ -10,7 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @Service
@@ -27,7 +30,11 @@ public class CartService {
     //新建购物车
     public void creatCart(String username)
     {
-        cartMapper.addCart(username);
+        DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+        Calendar calendar = Calendar.getInstance();
+        String dateName = df.format(calendar.getTime());
+        int cartid=Integer.parseInt(dateName);
+        cartMapper.addCart(cartid,username);
     }
 
     //删除购物车并删除其中的所有商品
@@ -48,44 +55,7 @@ public class CartService {
     public List<CartItem> getCartItemList(String cartId)
     {
         List<CartItem> cartItemList =  cartItemMapper.getCartItemList(cartId);
-        List<CartItem> newCartItemList = new ArrayList<>();
-
-        for(int i=0 ; i<cartItemList.size();i++)
-        {
-            if(cartItemList.get(i).getCategoryId().equals("FISH"))
-            {
-                newCartItemList.add(cartItemList.get(i));
-            }
-        }
-        for(int i=0 ; i<cartItemList.size();i++)
-        {
-            if(cartItemList.get(i).getCategoryId().equals("DOGS"))
-            {
-                newCartItemList.add(cartItemList.get(i));
-            }
-        }
-        for(int i=0 ; i<cartItemList.size();i++)
-        {
-            if(cartItemList.get(i).getCategoryId().equals("REPTILES"))
-            {
-                newCartItemList.add(cartItemList.get(i));
-            }
-        }
-        for(int i=0 ; i<cartItemList.size();i++)
-        {
-            if(cartItemList.get(i).getCategoryId().equals("CATS"))
-            {
-                newCartItemList.add(cartItemList.get(i));
-            }
-        }
-        for(int i=0 ; i<cartItemList.size();i++)
-        {
-            if(cartItemList.get(i).getCategoryId().equals("BIRDS"))
-            {
-                newCartItemList.add(cartItemList.get(i));
-            }
-        }
-        return newCartItemList;
+        return cartItemList;
     }
 
     //获取购物车中特定的商品

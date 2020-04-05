@@ -7,7 +7,6 @@
         SELECT
             CI.CARTID,
             CI.ITEMID,
-            CI.CATEGORYID,
             CI.QUANTITY,
             I.ITEMID AS "item.itemId",
             I.UNITCOST AS "item.unitCost",

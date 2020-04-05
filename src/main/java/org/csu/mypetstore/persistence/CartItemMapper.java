@@ -22,4 +22,5 @@ public interface CartItemMapper {
 
     void updateQuantity(@Param("cartId") String cartId,@Param("itemId") String itemId, @Param("quantity") int quantity);
 
+    boolean isInStock(@Param("itemId") String itemId,int quantity);
 }

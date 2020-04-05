@@ -17,9 +17,8 @@
         <div id="Menu">
             <div id="MenuContent">
                 <a href="/cart/viewCart"><img align="middle" name="img_cart" src="../images/cart.gif" /></a>
-                <img align="middle" src="../images/separator.gif" />
+                <img th:if="(${account} == null)" align="middle" src="../images/separator.gif" />
                 <a th:if="${account} == null" href="/account/viewSignOn">Sign In</a>
-                <a th:if="(${account} != null)" href="/account/viewSignOn">Sign In</a>
                 <img th:if="(${account} != null)" align="middle" src="../images/separator.gif" />
                 <a th:if="(${account} != null)" href="/account/signOff">Sign Out</a>
                 <img th:if="(${account} != null)" align="middle" src="../images/separator.gif" />

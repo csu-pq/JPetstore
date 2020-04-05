@@ -8,7 +8,7 @@ public interface CartMapper {
 
     Cart getCartByUsername(String username);
 
-    void addCart(String username);
+    void addCart(int cartid,String username);
 
     void deleteCart(String username);
 

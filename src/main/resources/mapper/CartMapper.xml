@@ -14,9 +14,9 @@
     <insert id="addCart" >
         INSERT
         INTO CART
-            (USERNAME)
+            (cartid,USERNAME)
         VALUES
-            (#{username})
+            (#{cartid},#{username})
     </insert>
 
     <delete id="deleteCart" >
