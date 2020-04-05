@@ -1,5 +1,6 @@
 package org.csu.mypetstore.service;
 
+import org.csu.mypetstore.domain.Account;
 import org.csu.mypetstore.domain.Cart;
 import org.csu.mypetstore.domain.CartItem;
 import org.csu.mypetstore.domain.Item;
@@ -12,9 +13,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class CartService {
@@ -144,5 +143,27 @@ public class CartService {
     {
         itemMapper.updateInventoryQuantity(itemId,quantity);
     }
+    public void updateCart(CartItem cartItem, Account account) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", account.getUsername());
+        map.put("itemId", cartItem.getItem().getItemId());
+        map.put("quantity", cartItem.getQuantity());
+        cartMapper.updateCart(map);
+    }
+    public void removeCartItem(CartItem cartItem, Account account) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", account.getUsername());
+        map.put("itemId", cartItem.getItem().getItemId());
+        cartMapper.removeCartItem(map);
+    }
+    public Cart getCartByUsername(String username) {
+        Cart cart = new Cart();
+        List<CartItem> cartItems = cartMapper.getCartItemListByUsername(username);
+        for (CartItem cartItem: cartItems) {
+            cart.addCartItem(cartItem);
+        }
+        return cart;
+    }
+
 
 }

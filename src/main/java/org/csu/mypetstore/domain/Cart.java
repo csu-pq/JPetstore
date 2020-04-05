@@ -47,6 +47,10 @@ public class Cart implements Serializable {
     public boolean containsItemId(String itemId) {
         return this.itemMap.containsKey(itemId);
     }
+    public CartItem getCartItemById(String itemId) {
+        CartItem cartItem = (CartItem) itemMap.get(itemId);
+        return cartItem;
+    }
 
     public void addItem(Item item, boolean isInStock) {
         CartItem cartItem = (CartItem)this.itemMap.get(item.getItemId());
@@ -60,6 +64,13 @@ public class Cart implements Serializable {
         }
 
         cartItem.incrementQuantity();
+    }
+    public void addCartItem(CartItem cartItem) {
+        CartItem cartItem1 = (CartItem) itemMap.get(cartItem.getItem().getItemId());
+        if(cartItem1 == null) {
+            itemMap.put(cartItem.getItem().getItemId(), cartItem);
+            itemList.add(cartItem);
+        }
     }
 
     public Item removeItemById(String itemId) {

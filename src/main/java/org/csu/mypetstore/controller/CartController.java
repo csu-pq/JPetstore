@@ -1,5 +1,7 @@
 package org.csu.mypetstore.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.csu.mypetstore.domain.Account;
 import org.csu.mypetstore.domain.Cart;
 import org.csu.mypetstore.domain.CartItem;
@@ -10,15 +12,15 @@ import org.csu.mypetstore.service.CatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.annotation.SessionScope;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @SessionScope
@@ -32,7 +34,6 @@ public class CartController {
     private CartService cartService;
     @Autowired
     private Cart cart;
-    @Autowired
 
 //进入购物车界面
     @GetMapping("viewCart")
@@ -72,5 +73,72 @@ public class CartController {
             model.addAttribute("account",account);
             return "cart/cart";
         }
+    }
+
+    @GetMapping("/removeItemFromCart")
+    public String removeItemFromCart(String workingItemId, Model model, HttpSession session) {
+        Account account = (Account) session.getAttribute("account");
+        Cart cart = cartService.getCartByUsername(account.getUsername());
+
+        cartService.removeCartItem(cart.getCartItemById(workingItemId), account);
+        Item item = cart.removeItemById(workingItemId);
+
+
+        if(item == null) {
+            model.addAttribute("msg", "Attempted to remove null CartItem from Cart.");
+            return "common/error";
+        }
+        return "cart/cart";
+    }
+    @GetMapping("/computeCartItem")
+    @ResponseBody
+    public String computeCartItem(String itemId, String quantity, HttpSession session) {
+        Account account = (Account) session.getAttribute("account");
+        Cart cart = cartService.getCartByUsername(account.getUsername());
+        CartItem cartItem = cart.getCartItemById(itemId);
+        cartItem.setQuantity(Integer.parseInt(quantity));
+        cartService.updateCart(cartItem, account);
+        double totalPrice = Integer.parseInt(quantity) * cartItem.getItem().getListPrice().doubleValue();
+
+        Map<String, String> map = new HashMap<>();
+        map.put("itemId", itemId);
+        map.put("totalPrice", String.valueOf(totalPrice));
+        map.put("subTotal", String.valueOf(cart.getSubTotal()));
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = null;
+        try {
+            json = objectMapper.writeValueAsString(map);
+        } catch (JsonProcessingException jpe) {
+            jpe.printStackTrace();
+        }
+        return json;
+    }
+    @PostMapping("/updateCart")
+    public String updateCart(Model model, HttpServletRequest request, HttpSession session) {
+        Account account = (Account) session.getAttribute("account");
+        Cart cart = cartService.getCart(account.getUsername());
+
+        //跟新购物车网页以及数据库
+        Iterator<CartItem> cartItems = cart.getAllCartItems();
+        while (cartItems.hasNext()) {
+            CartItem cartItem = (CartItem) cartItems.next();
+            String itemId = cartItem.getItem().getItemId();
+            try {
+                if(request.getParameter(itemId) != null) {
+                    int quantity = Integer.parseInt(request.getParameter(itemId));
+                    cart.setQuantityByItemId(itemId, quantity);
+                    cartService.updateCart(cartItem, account);
+                    if (quantity < 1) {
+                        cartItems.remove();
+                        cartService.removeCartItem(cartItem, account);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        model.addAttribute("cart", cart);
+        return "cart/cart";
     }
 }
