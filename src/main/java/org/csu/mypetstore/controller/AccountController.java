@@ -2,6 +2,7 @@ package org.csu.mypetstore.controller;
 
 import org.csu.mypetstore.domain.Account;
 import org.csu.mypetstore.domain.Order;
+import org.csu.mypetstore.domain.VerificationCode;
 import org.csu.mypetstore.service.CatalogService;
 import org.csu.mypetstore.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -107,4 +112,5 @@ public class AccountController {
             return "catalog/main";
         }
     }
+
 }

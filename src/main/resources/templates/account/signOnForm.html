@@ -16,11 +16,22 @@
 <div id="Content">
     <div id="Catalog">
         <form action="/account/signOn" method="post">
-            <p>Please enter your username and password.</p>
-            <p>
-                Username:<input type="text" name="username"><br/>
-                Password:<input type="password" name="password">
-            </p>
+            Please enter your username and password.
+            <table>
+                <tr>
+                    <td>Username:</td>
+                    <td><input type="text" name="username"></td><br/>
+                </tr>
+                <tr>
+                    <td>Password:</td>
+                    <td><input type="password" name="password"></td><br/>
+                </tr>
+                <tr>
+                    <td>Verification:</td>
+                    <td><input type="text" name="code"></td><br/>
+                    <td><a href=""><img src="/verCode"></a></td>
+                </tr>
+            </table>
             <p th:if="${msg!=null}" th:text="${msg}"></p>
             <input type="submit" value="signOn">
         </form>

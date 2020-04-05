@@ -14,6 +14,7 @@ public class CartItem implements Serializable {
     private String cartId;
     private String categoryId;
 
+
     public void setItemId(String itemId) {
         this.itemId = itemId;
     }

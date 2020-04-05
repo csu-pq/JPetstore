@@ -78,28 +78,28 @@ class MypetstoreApplicationTests {
     @Test
     void testAccount(){
         //查询账户
-        Account account = accountService.getAccount("j2ee");
+        Account account = accountService.getAccount("a");
         System.out.println(account.getEmail()+","+account.getPassword()+","+account.getAddress1());
         //修改账户
-        account.setUsername("abc");
-        account.setPassword("zyx");
+        account.setUsername("abc1");
+        account.setPassword("zyx1");
         accountService.updateAccount(account);
         //新建用户
         Account new_account=new Account();
-        new_account.setUsername("new");
-        new_account.setPassword("123");
-        new_account.setFirstName("f");
-        new_account.setLastName("l");
-        new_account.setAddress1("ad1");
-        new_account.setAddress2("ad2");
-        new_account.setCity("changsha");
-        new_account.setCountry("China");
-        new_account.setEmail("new@csu.edu.cn");
-        new_account.setState("state");
-        new_account.setPhone("phone");
-        new_account.setZip("zip");
-        new_account.setLanguagePreference("language");
-        new_account.setFavouriteCategoryId("favorite");
+        new_account.setUsername("new1");
+        new_account.setPassword("1231");
+        new_account.setFirstName("f1");
+        new_account.setLastName("l1");
+        new_account.setAddress1("ad11");
+        new_account.setAddress2("ad21");
+        new_account.setCity("changsha1");
+        new_account.setCountry("China1");
+        new_account.setEmail("new@csu.edu.cn1");
+        new_account.setState("state1");
+        new_account.setPhone("phone1");
+        new_account.setZip("zip1");
+        new_account.setLanguagePreference("language1");
+        new_account.setFavouriteCategoryId("favorite1");
         accountService.insertAccount(new_account);
     }
     @Test
