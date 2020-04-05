@@ -6,30 +6,23 @@
     <link rel="stylesheet" href="/css/jpetstore.css" type="text/css" media="screen" />
 </head>
 <body>
-<div th:replace="/common/IncludeTop"></div>
-
-<div id="Catalog">
-
-    <h2>My Orders</h2>
-
+<header th:replace="common/top"></header>
+<div id="Content">
+<!--    跳转页面内容-->
     <table>
         <tr>
             <th>Order ID</th>
             <th>Date</th>
             <th>Total Price</th>
         </tr>
-
-        <tr th:each="order : ${session.orderList}">
-            <td>
-                <a th:href="@{/order/viewOrder(orderId=${order.orderId})}" th:text="${order.orderId}"></a>
-            </td>
-            <td th:text="${#dates.format(order.orderDate, 'yyyy/MM/dd hh:mm:ss')}"></td>
-            <td th:text="${#numbers.formatDecimal(order.totalPrice, 1, 2)}"></td>
+        <tr th:each="Order : ${orderList}">
+            <td><a th:href="@{/order/getOrderByOrderId(orderId=${Order.orderId})}" th:text="${Order.orderId}"></a></td>
+            <td th:text="${Order.orderDate}">2</td>
+            <td th:text="${Order.totalPrice}">3</td>
         </tr>
     </table>
-
 </div>
-
-<div th:replace="/common/IncludeBottom"></div>
+<footer th:replace="common/bottom"></footer>
 </body>
+
 </html>
