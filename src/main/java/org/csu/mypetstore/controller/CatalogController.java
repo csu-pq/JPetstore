@@ -10,35 +10,34 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.context.annotation.SessionScope;
 
 import java.util.List;
 
 @Controller
-@SessionScope
-@RequestMapping("/catalog")
+@RequestMapping("/catalog/")
 public class CatalogController {
+
     @Autowired
     private CatalogService catalogService;
 
-    @GetMapping("/index")
-    public String view(){
+    @GetMapping("index")
+    public String index() {
         return "catalog/main";
     }
 
-    @GetMapping("/viewCategory")
-    public String viewCategory(String categoryId, Model model){
-        if (categoryId != null){
-            Category category = catalogService.getCategory(categoryId);
+    @GetMapping("viewCategory")
+    public String viewCategory(String categoryId, Model model) {
+        if (categoryId != null) {
             List<Product> productList = catalogService.getProductListByCategory(categoryId);
-            model.addAttribute("category",category);
-            model.addAttribute("productList",productList);
-
+            Category category = catalogService.getCategory(categoryId);
+            model.addAttribute("productList", productList);
+            model.addAttribute("category", category);
         }
         return "catalog/category";
     }
+
     @GetMapping("viewProduct")
-    public String viewProduct(String productId,Model model){
+    public String viewProduct(String productId, Model model) {
         if (productId != null) {
             List<Item> itemList = catalogService.getItemListByProduct(productId);
             Product product = catalogService.getProduct(productId);
@@ -47,8 +46,9 @@ public class CatalogController {
         }
         return "catalog/product";
     }
+
     @GetMapping("viewItem")
-    public String viewItem(String itemId,Model model){
+    public String viewItem(String itemId, Model model){
         Item item = catalogService.getItem(itemId);
         Product product = item.getProduct();
         processProductDescription(product);
@@ -56,6 +56,7 @@ public class CatalogController {
         model.addAttribute("product",product);
         return "catalog/item";
     }
+
     @PostMapping("searchProducts")
     public String searchProducts(String keyword, Model model){
         if(keyword == null || keyword.length() < 1){
@@ -71,6 +72,12 @@ public class CatalogController {
 
     }
 
+    /*
+        解决Thymeleaf将数据库中的Product的描述(description属性)中的<image>标签解析成普通文本的问题。
+        本方法在Product中添加了imageURL属性，相当于将product的描述信息分成两部分处理了。
+        同样，界面上也是用了两个标签了，一个img标签和一个lable标签。
+        此方法是快速解决上述问题的临时方案，更好的方法应是更改数据库结构，将图片信息和普通文字描述信息分为两个字段存储。
+     */
     private void processProductDescription(Product product){
         String [] temp = product.getDescription().split("\"");
         product.setDescriptionImage(temp[1]);
@@ -81,4 +88,5 @@ public class CatalogController {
             processProductDescription(product);
         }
     }
+
 }
