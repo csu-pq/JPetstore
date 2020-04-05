@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="fields">
+        <h3>Account Information</h3>
+
+        <table>
+            <tr>
+                <td>First name:</td>
+                <td><input type="text" th:field="*{firstName}"></td>
+            </tr>
+            <tr>
+                <td>Last name:</td>
+                <td><input type="text" th:field="*{lastName}"></td>
+            </tr>
+            <tr>
+                <td>Email:</td>
+                <td><input type="text" th:field="*{email}" size="40"></td>
+            </tr>
+            <tr>
+                <td>Phone:</td>
+                <td><input type="text" th:field="*{phone}"></td>
+            </tr>
+            <tr>
+                <td>Address 1:</td>
+                <td><input type="text" th:field="*{address1}"></td>
+            </tr>
+            <tr>
+                <td>Address 2:</td>
+                <td><input type="text" th:field="*{address2}" size="40"></td>
+            </tr>
+            <tr>
+                <td>City:</td>
+                <td><input type="text" th:field="*{city}"></td>
+            </tr>
+            <tr>
+                <td>State:</td>
+                <td><input type="text" th:field="*{state}" size="4"></td>
+            </tr>
+            <tr>
+                <td>Zip:</td>
+                <td><input type="text" th:field="*{zip}" size="10"></td>
+            </tr>
+            <tr>
+                <td>Country:</td>
+                <td><input type="text" th:field="*{country}" size="15"></td>
+            </tr>
+        </table>
+
+        <h3>Profile Information</h3>
+
+        <table>
+            <tr>
+                <td>Language Preference:</td>
+                <td>
+                    <select th:field="*{languagePreference}">
+                        <option th:each="language:${LANGUAGE_LIST}" th:value="${language}" th:text="${language}">
+
+                        </option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Favourite Category:</td>
+                <td>
+                    <select th:field="*{favouriteCategoryId}">
+                        <option th:each="categoryId:${CATEGORY_LIST}" th:value="${categoryId}" th:text="${categoryId}">
+
+                        </option>
+                    </select>
+            </tr>
+            <tr>
+                <td>Enable MyList</td>
+                <td><input type="checkbox" th:field="*{listOption}"></td>
+            </tr>
+            <tr>
+                <td>Enable MyBanner</td>
+                <td><input type="checkbox" th:field="*{bannerOption}"></td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
