@@ -3,6 +3,7 @@ package org.csu.mypetstore.controller;
 import org.csu.mypetstore.domain.Cart;
 import org.csu.mypetstore.domain.CartItem;
 import org.csu.mypetstore.domain.Item;
+import org.csu.mypetstore.service.CartService;
 import org.csu.mypetstore.service.CatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,8 @@ public class CartController {
     @Autowired
     private CatalogService catalogService;
     @Autowired
+    private CartService cartService;
+    @Autowired
     private Cart cart;
 
     @GetMapping("viewCart")
@@ -32,9 +35,8 @@ public class CartController {
 
     @GetMapping("addItemToCart")
     public String addItemToCart(String workingItemId,Model model){
-        Item item = cart.removeItemById(workingItemId);
         model.addAttribute("cart",cart);
-        if(item == null){
+        if(cart == null){
             model.addAttribute("msg", "Attempted to remove null CartItem from Cart.");
             return "common/error";
         }else{

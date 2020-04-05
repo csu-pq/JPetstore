@@ -1,12 +1,17 @@
 package org.csu.mypetstore.controller;
 
 import org.csu.mypetstore.domain.Account;
+import org.csu.mypetstore.domain.Order;
 import org.csu.mypetstore.service.CatalogService;
+import org.csu.mypetstore.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.csu.mypetstore.service.AccountService;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/account")
@@ -14,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class AccountController {
     @Autowired
     private AccountService accountService;
+
     @GetMapping("/viewSignOn")
     public  String viewSignOn()
     {
@@ -46,8 +52,7 @@ public class AccountController {
     @GetMapping("/signOff")
     public String signOff(Model model)
     {
-        Account account=null;
-        model.addAttribute("account",account);
+        model.addAttribute("account",null);
         return "catalog/main";
     }
 
@@ -72,6 +77,33 @@ public class AccountController {
         } else {
             accountService.updateAccount(account);
             model.addAttribute("account", account);
+            return "catalog/main";
+        }
+    }
+
+    @GetMapping("/newAccountForm")
+    public String newAccountForm(Model model)
+    {
+        Account newAccount=new Account();
+        model.addAttribute("newAccount",newAccount);
+        return "account/newAccountForm";
+    }
+
+    @PostMapping("/newAccount")
+    public String newAccount(Account newAccount,String repeatedPassword,Model model)
+    {
+        if(newAccount.getPassword()!=repeatedPassword||repeatedPassword==null)
+        {
+            model.addAttribute("msg","输入相同且正确的密码");
+            return "account/newAccountForm";
+        }
+        else
+        {
+            System.out.println(newAccount.getUsername());
+            Account account=newAccount;
+            accountService.insertAccount(account);
+            model.addAttribute("account",account);
+            model.addAttribute("newAccount",null);
             return "catalog/main";
         }
     }

@@ -8,7 +8,18 @@
 <body>
 <header th:replace="common/top"></header>
 <div id="Content">
-    //跳转页面内容
+        <table>
+            <tr>
+                <th>Order ID</th>
+                <th>Date</th>
+                <th>Total Price</th>
+            </tr>
+            <tr th:each="Order : ${orderList}">
+                <td><a th:href="@{/order/getOrderByOrderId(orderId=${Order.orderId})}" th:text="${Order.orderId}"></a></td>
+                <td th:text="${Order.orderDate}">2</td>
+                <td th:text="${Order.totalPrice}">3</td>
+            </tr>
+        </table>
 </div>
 <footer th:replace="common/bottom"></footer>
 </body>
