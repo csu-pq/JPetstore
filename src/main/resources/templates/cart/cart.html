@@ -27,38 +27,37 @@
                     <th><b>Total Cost</b></th>
                     <th>&nbsp;</th>
                 </tr>
-                <tr th:if="(${cart.numberOfItems}==0)">
+                <tr th:if="(${cartItemList}==null)">
                     <td colspan="8"><b>Your cart is empty.</b></td>
                 </tr>
                     <tr th:each="cartItem:${cartItemList}">
                         <td>
-                            <a href="/catalog/viewItem?itemId=${item.itemId}" th:text="${cartItem.item.itemId}"></a>
+                            <a href="/catalog/viewItem?itemId=${cartItem.item.itemId}" th:text="${cartItem.item.itemId}"></a>
                         </td>
                         <td th:text="${cartItem.item.productId}">
-
                         </td>
                         <td th:text="${cartItem.item.attribute1}">
                         </td>
                         <td th:text="${cartItem.inStock}">
                         </td>
-                        <td><input type="text" name="quantity" id="quantity" value="#{cartItem.item.quantity}"></td>
-                        <td th:text="${cartItem.item.listPrice}"></td>
-                        <td th:text="${cartItem.getTotal()}"></td>
+                        <td><input type="text" name="quantity" id="quantity" th:value="${cartItem.quantity}"></td>
+                        <td th:text="'$'+${cartItem.item.listPrice}"></td>
+                        <td th:text="'$'+${cartItem.item.listPrice}*${cartItem.quantity}"></td>
                         <td>
                             <a class="Button" href="#?itemId=${cartItem.item.itemId}">Remove</a>
                         </td>
                     </tr>
                 <tr>
                     <td colspan="7">
-                        <label th:text="'Sub Total:$'+${cart.getSubTotal()}"></label>
-                        <input type="submit" value="Update Cart">
+                        <label th:text="'Sub Total:$'+${cart.total}"></label>
+                        <input type="submit" value="Update Cart" href="cart/updateCart">
                     </td>
                     <td>&nbsp;</td>
                 </tr>
             </table>
         </form>
 
-        <a class="Button" th:if="${cart.numberOfItems > 0}" href="#">
+        <a class="Button" th:if="${cartItemList!=null}" href="#">
             Proceed to Checkout
         </a>
 

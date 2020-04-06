@@ -32,26 +32,23 @@ public class AccountController {
     }
 
     @PostMapping("/signOn")
-    public String signOn(String username, String password, String code, Model model, HttpSession session) {
-        String rightCode = (String) session.getAttribute("code");
+    public String signOn(@SessionAttribute("code")String rightCode, String username, String password, String inputCode, Model model) {
         Account account=accountService.getAccount(username,password);
-        if(account==null|| !code.equals(rightCode))
+
+        if(account==null)
         {
-            model.addAttribute("msg", "用户名、密码或验证码不正确");
+            model.addAttribute("msg","用户名或密码错误");
+            return "account/signOnForm";
+        }
+        else if(!inputCode.equals(rightCode))
+        {
+            model.addAttribute("msg","验证码错误");
             return "account/signOnForm";
         }
         else
         {
-            if(account!=null)
-            {
-                model.addAttribute("account",account);
-                return"catalog/main";
-            }
-            else
-            {
-                model.addAttribute("msg", "password error");
-                return "account/signOnForm";
-            }
+            model.addAttribute("account",account);
+            return "catalog/main";
         }
     }
 
@@ -90,26 +87,41 @@ public class AccountController {
     @GetMapping("/newAccountForm")
     public String newAccountForm(Model model)
     {
-        Account newAccount=new Account();
-        model.addAttribute("newAccount",newAccount);
+        Account account=new Account();
+        model.addAttribute("account",account);
         return "account/newAccountForm";
     }
 
     @PostMapping("/newAccount")
-    public String newAccount(Account newAccount,String repeatedPassword,Model model)
+    public String newAccount(@SessionAttribute("code")String code, Account account,String repeatedPassword,String inputCode,Model model)
     {
-        if(newAccount.getPassword()!=repeatedPassword||repeatedPassword==null)
+        //通过输入的用户名查找是否有改用户
+        Account newAccount=accountService.getAccount(account.getUsername());
+        if(newAccount!=null)
         {
-            model.addAttribute("msg","输入相同且正确的密码");
+            String msg="账户名已存在";
+            model.addAttribute("msg",msg);
+            return "account/newAccountForm";
+        }
+        else if (account.getPassword() == null || account.getPassword().length() == 0 || repeatedPassword == null || repeatedPassword.length() == 0) {
+            String msg = "密码不能为空";
+            model.addAttribute("msg", msg);
+            return "account/newAccountForm";
+        } else if (!account.getPassword().equals(repeatedPassword)) {
+            String msg = "两次密码不一致";
+            model.addAttribute("msg", msg);
+            return "account/newAccountForm";
+        }
+        else if(!code.equals(inputCode))
+        {
+            String msg="验证码错误";
+            model.addAttribute("msg",msg);
             return "account/newAccountForm";
         }
         else
         {
-            System.out.println(newAccount.getUsername());
-            Account account=newAccount;
             accountService.insertAccount(account);
-            model.addAttribute("account",account);
-            model.addAttribute("newAccount",null);
+            model.addAttribute("account", account);
             return "catalog/main";
         }
     }

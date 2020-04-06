@@ -58,9 +58,8 @@
                 <td>Language Preference:</td>
                 <td>
                     <select th:field="*{languagePreference}">
-                        <option th:each="language:${LANGUAGE_LIST}" th:value="${language}" th:text="${language}">
-
-                        </option>
+                        <option th:value="Chinese">Chinese</option>
+                        <option th:value="English">English</option>
                     </select>
                 </td>
             </tr>
@@ -68,9 +67,11 @@
                 <td>Favourite Category:</td>
                 <td>
                     <select th:field="*{favouriteCategoryId}">
-                        <option th:each="categoryId:${CATEGORY_LIST}" th:value="${categoryId}" th:text="${categoryId}">
-
-                        </option>
+                        <option th:value="BIRDS">BIRDS</option>
+                        <option th:value="CATS">CATS</option>
+                        <option th:value="DOGS">DOGS</option>
+                        <option th:value="FISH">FISH</option>
+                        <option th:value="REPTILES">REPTILES</option>
                     </select>
             </tr>
             <tr>

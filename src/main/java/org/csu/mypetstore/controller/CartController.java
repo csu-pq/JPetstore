@@ -35,11 +35,13 @@ public class CartController {
     @Autowired
     private Cart cart;
 
-//进入购物车界面
+//进入购物车界面（完）
     @GetMapping("viewCart")
     public String viewCart(@SessionAttribute("account")Account account, Model model){
         cart=cartService.getCart(account.getUsername());
         String cartId=cart.getCartId();
+        cart.setTotal(cartService.getCartTotalCost(cartId));
+
         List <CartItem> cartItemList=cartService.getCartItemList(cartId);
         System.out.println(cartItemList.size());
         model.addAttribute("account",account);
@@ -47,6 +49,7 @@ public class CartController {
         model.addAttribute("cartItemList",cartItemList);
         return "cart/cart";
     }
+
 //添加商品跳往购物车界面
     @GetMapping("addItemToCart")
     public String addItemToCart(@SessionAttribute("account") Account account, String workingItemId, Model model){
@@ -67,10 +70,16 @@ public class CartController {
         }
         else//不为空直接添加
         {
-            boolean inStock=catalogService.isItemInStock(workingItemId);
-            cart.addItem(catalogService.getItem(workingItemId),inStock);
-            model.addAttribute("cart",cart);
+            boolean inStock=true;
+            //boolean inStock=catalogService.isItemInStock(workingItemId);
+            String cartId=cart.getCartId();
+            cartService.addItem(cartId,workingItemId);
+            cart.setTotal(cartService.getCartTotalCost(cartId));
+            List <CartItem> cartItemList=cartService.getCartItemList(cartId);
+            System.out.println(cartItemList.size());
             model.addAttribute("account",account);
+            model.addAttribute("cart",cart);
+            model.addAttribute("cartItemList",cartItemList);
             return "cart/cart";
         }
     }
@@ -114,31 +123,35 @@ public class CartController {
         }
         return json;
     }
+
+    //更新购物车（完）
     @PostMapping("/updateCart")
     public String updateCart(Model model, HttpServletRequest request, HttpSession session) {
-        Account account = (Account) session.getAttribute("account");
-        Cart cart = cartService.getCart(account.getUsername());
+        //Account account = (Account) session.getAttribute("account");
+        //Cart cart = cartService.getCart(account.getUsername());
+        Account account=(Account) session.getAttribute("account");
+        Cart cart=cartService.getCart(account.getUsername());
+        String[] quantities =request.getParameterValues("quantity");
 
-        //跟新购物车网页以及数据库
-        Iterator<CartItem> cartItems = cart.getAllCartItems();
-        while (cartItems.hasNext()) {
-            CartItem cartItem = (CartItem) cartItems.next();
-            String itemId = cartItem.getItem().getItemId();
-            try {
-                if(request.getParameter(itemId) != null) {
-                    int quantity = Integer.parseInt(request.getParameter(itemId));
-                    cart.setQuantityByItemId(itemId, quantity);
-                    cartService.updateCart(cartItem, account);
-                    if (quantity < 1) {
-                        cartItems.remove();
-                        cartService.removeCartItem(cartItem, account);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        String cartId=cart.getCartId();
+
+        System.out.println("cratId："+ cartId);
+
+        List<CartItem> cartItemList=cartService.getCartItemList(cartId);
+        int num=0;
+        while (num<cartItemList.size()){
+            int qua=Integer.parseInt(quantities[num]);
+            String itemId=cartItemList.get(num).getItemId();
+            cartService.updateCartItemQuantity(cartId,itemId,qua);
+            num++;
         }
-        model.addAttribute("cart", cart);
+        cart.setTotal(cartService.getCartTotalCost(cartId));
+
+        List <CartItem> cartItemList1=cartService.getCartItemList(cartId);
+        System.out.println(cartItemList.size());
+        model.addAttribute("account",account);
+        model.addAttribute("cart",cart);
+        model.addAttribute("cartItemList",cartItemList1);
         return "cart/cart";
     }
 }

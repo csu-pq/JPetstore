@@ -3,9 +3,9 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.csu.mypetstore.persistence.CartMapper">
-    <select id="getCartItemListByUsername" parameterType="string" resultType="CartItem">
+    <select id="getCartItemListByCartId" parameterType="string" resultType="CartItem">
         SELECT
-            C.ITEMID AS "item.itemId",
+            CI.ITEMID AS "item.itemId",
             QUANTITY,
             I.LISTPRICE AS "item.listPrice",
             UNITCOST AS "item.unitCost",
@@ -23,11 +23,11 @@
             QTY AS "item.quantity",
             QUANTITY*I.LISTPRICE AS "total",
             QTY>QUANTITY AS "inStock"
-        FROM CART C, ITEM I, INVENTORY V, PRODUCT P
+        FROM CARTITEM CI, ITEM I, INVENTORY V, PRODUCT P
         WHERE P.PRODUCTID = I.PRODUCTID
         AND I.ITEMID = V.ITEMID
-        AND C.ITEMID = I.ITEMID
-        AND C.USERNAME = #{value}
+        AND CI.ITEMID = I.ITEMID
+        AND CI.USERNAME = #{value}
     </select>
     <select id="getCartByUsername"  resultType="Cart">
         SELECT

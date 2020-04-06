@@ -12,9 +12,19 @@ public class Cart implements Serializable {
     private final Map<String, CartItem> itemMap = Collections.synchronizedMap(new HashMap());
     private final List<CartItem> itemList;
     private String cartId;
+    private BigDecimal total;
 
+    public void setTotal(BigDecimal number)
+    {
+        this.total=number;
+    }
     public String getCartId() {
         return cartId;
+    }
+
+    public BigDecimal getTotal()
+    {
+        return total;
     }
 
     public void setCartId(String cartId) {

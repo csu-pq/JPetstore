@@ -9,6 +9,7 @@
             CI.ITEMID,
             CI.QUANTITY,
             I.ITEMID AS "item.itemId",
+            I.LISTPRICE AS "item.listPrice",
             I.UNITCOST AS "item.unitCost",
             I.SUPPLIER AS "item.supplierId",
             I.PRODUCTID AS "item.productId",
@@ -27,7 +28,6 @@
         SELECT
             CI.CARTID,
             CI.ITEMID,
-            CI.CATEGORYID,
             CI.QUANTITY,
             I.ITEMID AS "item.itemId",
             I.UNITCOST AS "item.unitCost",
@@ -45,18 +45,7 @@
         AND   CI.ITEMID = #{itemId}
     </select>
     <insert id="insertCartItem">
-        INSERT
-        INTO CARTITEM
-            (CARTID, ITEMID,CATEGORYID, QUANTITY)
-        SELECT
-            #{cartId},
-            I.ITEMID,
-            P.CATEGORY AS CATEGORYID,
-            #{quantity}
-        FROM PRODUCT P,ITEM I
-        WHERE P.PRODUCTID = I.PRODUCTID
-        AND I.ITEMID = #{itemId}
-
+        INSERT INTO CARTITEM(CARTID, ITEMID,QUANTITY) values (#{cartId},#{itemId},#{quantity})
     </insert>
 
     <delete id="deleteCartItem">

@@ -8,8 +8,11 @@
 <body>
 <header th:replace="common/top"></header>
 <div id="Content">
+    <div id="BackLink">
+        <a href="/catalog/index">Return to Main Menu</a>
+    </div>
     <div id="Catalog">
-        <form action="/account/newAccount" method="post" th:object="${newAccount}">
+        <form action="/account/newAccount" method="post" th:object="${account}">
             <h3>User Information</h3>
             <table>
                 <tr>
@@ -26,7 +29,7 @@
                 </tr>
                 <tr>
                     <td>Verification:</td>
-                    <td><input type="text" name="code"></td>
+                    <td><input type="text" name="inputCode"></td>
                     <td><a href=""><img src="/verCode"></a></td>
                 </tr>
                 <tr>

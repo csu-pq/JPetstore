@@ -8,6 +8,9 @@
 <body>
 <header th:replace="common/top"></header>
 <div id="Content">
+    <div id="BackLink">
+        <a href="/catalog/index">Return to Main Menu</a>
+    </div>
     <div id="Catalog">
         <form action="/account/editAccount" method="post" th:object="${account}">
             <h3>User Information</h3>

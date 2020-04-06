@@ -91,7 +91,8 @@ public class CartService {
         CartItem cartItem = cartItemMapper.getCartItem(cartId, itemId);
         if(cartItem == null)
         {
-            cartItemMapper.insertCartItem(cartId,itemId,1);
+            int number=1;
+            cartItemMapper.insertCartItem(cartId,itemId,number);
         }
         else
         {
@@ -104,8 +105,7 @@ public class CartService {
     public BigDecimal getCartItemTotalCost(String cartId,String cartItemId)
     {
         int quantity= cartItemMapper.getCartItem(cartId,cartItemId).getQuantity();
-        //  System.out.println(itemMapper.getItem(cartItemId).getUnitCost().multiply(new BigDecimal(String.valueOf(quantity))));
-        return itemMapper.getItem(cartItemId).getUnitCost().multiply(new BigDecimal(String.valueOf(quantity)));
+        return itemMapper.getItem(cartItemId).getListPrice().multiply(new BigDecimal(String.valueOf(quantity)));
     }
 
     //获取购物车商品总价
@@ -115,10 +115,8 @@ public class CartService {
         List<CartItem> cartItemList = cartItemMapper.getCartItemList(cartId);
         for (int i = 0;i<cartItemList.size();i++)
         {
-            //  System.out.println(getCartItemTotalCost(cartId,cartItemList.get(i).getItemId()));
             subTotal=subTotal.add(getCartItemTotalCost(cartId,cartItemList.get(i).getItemId()));
         }
-        // System.out.println("subTotal:"+subTotal);
         return subTotal;
     }
 
