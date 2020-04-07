@@ -52,4 +52,7 @@ public class CatalogService {
         return itemMapper.getInventoryQuantity(itemId) > 0;
     }
 
+    public int getItemInventoryQuantity(String itemId) {
+        return itemMapper.getInventoryQuantity(itemId);
+    }
 }

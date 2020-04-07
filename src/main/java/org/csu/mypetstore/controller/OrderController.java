@@ -3,6 +3,7 @@ package org.csu.mypetstore.controller;
 import org.csu.mypetstore.domain.*;
 import org.csu.mypetstore.persistence.LineItemMapper;
 import org.csu.mypetstore.service.CartService;
+import org.csu.mypetstore.service.CatalogService;
 import org.csu.mypetstore.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -24,6 +26,8 @@ public class OrderController {
     private OrderService orderService;
     @Autowired
     private CartService cartService;
+    @Autowired
+    private CatalogService catalogService;
 
 //结账1
     @GetMapping("/newOrderForm")
@@ -35,6 +39,18 @@ public class OrderController {
             return "account/signOnForm";
         } else {
             Cart cart = cartService.getCartByUsername(account.getUsername());
+            Iterator<CartItem> cartItems = cart.getAllCartItems();
+            List<String> outOfStockItems = new ArrayList<>();
+            while(cartItems.hasNext()) {
+                CartItem cartItem = cartItems.next();
+                if (cartItem.getQuantity() > catalogService.getItemInventoryQuantity(cartItem.getItem().getItemId()))
+                    outOfStockItems.add(cartItem.getItem().getItemId());
+            }
+            if (outOfStockItems.size() > 0) {
+                model.addAttribute("outOfStockMsg", "The item(s) " + outOfStockItems.toString() + " is(are) out of stock.");
+                model.addAttribute("cart", cart);
+                return "cart/cart";
+            }
             Order order = new Order();
             order.initOrder(account, cart);
             session.setAttribute("order", order);

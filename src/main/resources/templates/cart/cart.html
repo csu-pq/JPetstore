@@ -15,6 +15,7 @@
     <div id="Catalog">
 
         <h2>Shopping Cart</h2>
+        <p id="outOfStockMsg" th:text="${outOfStockMsg}"></p>
         <form action="/cart/updateCart" method="post">
             <table>
                 <tr>
@@ -38,7 +39,8 @@
                         </td>
                         <td th:text="${cartItem.item.attribute1}">
                         </td>
-                        <td th:text="${cartItem.inStock}">
+                        <!--<td th:text="${cartItem.inStock}">-->
+                        <td th:name="${cartItem.item.itemId}" th:text="${cartItem.inStock}"></td>
                         </td>
                         <td><input type="text" name="quantity" id="quantity" th:value="${cartItem.quantity}"></td>
                         <td th:text="'$'+${cartItem.item.listPrice}"></td>
