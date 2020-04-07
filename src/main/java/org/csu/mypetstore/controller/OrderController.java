@@ -79,8 +79,15 @@ public class OrderController {
         }
         return "order/viewOrder";
     }
-
 //查看历史订单（完）
+    @GetMapping("/viewListOrders")
+    public String viewListOrders(@SessionAttribute("account")Account account, Model model) {
+        List<Order> orderList = orderService.getOrdersByUsername(account.getUsername());
+        model.addAttribute("account",account);
+        model.addAttribute("orderList", orderList);
+        return "order/listOrders";
+    }
+//查看刚完成的订单
     @GetMapping("/viewOder")
     public String view(@SessionAttribute("account")Account account, Model model)
     {
