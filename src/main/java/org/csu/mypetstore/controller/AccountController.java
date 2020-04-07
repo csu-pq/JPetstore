@@ -1,6 +1,7 @@
 package org.csu.mypetstore.controller;
 
 import org.csu.mypetstore.domain.Account;
+import org.csu.mypetstore.domain.EncryptionUtil;
 import org.csu.mypetstore.domain.Order;
 import org.csu.mypetstore.domain.VerificationCode;
 import org.csu.mypetstore.service.CatalogService;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.csu.mypetstore.service.AccountService;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +35,7 @@ public class AccountController {
 
     @PostMapping("/signOn")
     public String signOn(@SessionAttribute("code")String rightCode, String username, String password, String inputCode, Model model) {
-        Account account=accountService.getAccount(username,password);
+        Account account = accountService.getAccount(username, DigestUtils.md5DigestAsHex(password.getBytes()));
 
         if(account==null)
         {
@@ -78,6 +80,7 @@ public class AccountController {
             model.addAttribute("msg", msg);
             return "account/editAccountForm";
         } else {
+            account.setPassword(DigestUtils.md5DigestAsHex(account.getPassword().getBytes()));
             accountService.updateAccount(account);
             model.addAttribute("account", account);
             return "catalog/main";
@@ -112,6 +115,8 @@ public class AccountController {
             model.addAttribute("msg", msg);
             return "account/newAccountForm";
         }
+
+        //验证码错误
         else if(!code.equals(inputCode))
         {
             String msg="验证码错误";
@@ -120,6 +125,7 @@ public class AccountController {
         }
         else
         {
+            account.setPassword(DigestUtils.md5DigestAsHex(account.getPassword().getBytes()));
             accountService.insertAccount(account);
             model.addAttribute("account", account);
             return "catalog/main";
