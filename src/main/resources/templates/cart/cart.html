@@ -27,7 +27,7 @@
                     <th><b>Total Cost</b></th>
                     <th>&nbsp;</th>
                 </tr>
-                <tr th:if="(${cartItemList}==null)">
+                <tr th:if="(${cartItemList.size()}==0)">
                     <td colspan="8"><b>Your cart is empty.</b></td>
                 </tr>
                     <tr th:each="cartItem:${cartItemList}">
@@ -44,7 +44,7 @@
                         <td th:text="'$'+${cartItem.item.listPrice}"></td>
                         <td th:text="'$'+${cartItem.item.listPrice}*${cartItem.quantity}"></td>
                         <td>
-                            <a class="Button" href="#?itemId=${cartItem.item.itemId}">Remove</a>
+                            <a class="Button" th:href="@{/cart/removeItemFromCart(itemId=${cartItem.item.itemId})}">Remove</a>
                         </td>
                     </tr>
                 <tr>
@@ -57,7 +57,7 @@
             </table>
         </form>
 
-        <a class="Button" th:if="${cartItemList!=null}" href="#">
+        <a class="Button" th:if="${cartItemList.size()}!=0" th:href="@{/order/newOrderForm}">
             Proceed to Checkout
         </a>
 

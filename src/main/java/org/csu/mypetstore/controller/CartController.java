@@ -43,14 +43,13 @@ public class CartController {
         cart.setTotal(cartService.getCartTotalCost(cartId));
 
         List <CartItem> cartItemList=cartService.getCartItemList(cartId);
-        System.out.println(cartItemList.size());
         model.addAttribute("account",account);
         model.addAttribute("cart",cart);
         model.addAttribute("cartItemList",cartItemList);
         return "cart/cart";
     }
 
-//添加商品跳往购物车界面
+//添加商品跳往购物车界面(完)
     @GetMapping("addItemToCart")
     public String addItemToCart(@SessionAttribute("account") Account account, String workingItemId, Model model){
         cart=cartService.getCart(account.getUsername());
@@ -76,27 +75,26 @@ public class CartController {
             cartService.addItem(cartId,workingItemId);
             cart.setTotal(cartService.getCartTotalCost(cartId));
             List <CartItem> cartItemList=cartService.getCartItemList(cartId);
-            System.out.println(cartItemList.size());
             model.addAttribute("account",account);
             model.addAttribute("cart",cart);
             model.addAttribute("cartItemList",cartItemList);
             return "cart/cart";
         }
     }
-
+//移除商品(完)
     @GetMapping("/removeItemFromCart")
-    public String removeItemFromCart(String workingItemId, Model model, HttpSession session) {
+    public String removeItemFromCart(String itemId, Model model, HttpSession session) {
         Account account = (Account) session.getAttribute("account");
-        Cart cart = cartService.getCartByUsername(account.getUsername());
+        Cart cart = cartService.getCart(account.getUsername());
+        String cartId=cart.getCartId();
 
-        cartService.removeCartItem(cart.getCartItemById(workingItemId), account);
-        Item item = cart.removeItemById(workingItemId);
+        cartService.removeCartItem(itemId, cartId);
 
-
-        if(item == null) {
-            model.addAttribute("msg", "Attempted to remove null CartItem from Cart.");
-            return "common/error";
-        }
+        cart.setTotal(cartService.getCartTotalCost(cartId));
+        List <CartItem> cartItemList=cartService.getCartItemList(cartId);
+        model.addAttribute("account",account);
+        model.addAttribute("cart",cart);
+        model.addAttribute("cartItemList",cartItemList);
         return "cart/cart";
     }
     @GetMapping("/computeCartItem")

@@ -148,11 +148,8 @@ public class CartService {
         map.put("quantity", cartItem.getQuantity());
         cartMapper.updateCart(map);
     }
-    public void removeCartItem(CartItem cartItem, Account account) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("userId", account.getUsername());
-        map.put("itemId", cartItem.getItem().getItemId());
-        cartMapper.removeCartItem(map);
+    public void removeCartItem(String itemId,String cartId) {
+        cartItemMapper.deleteCartItem(cartId,itemId);
     }
     public Cart getCartByUsername(String username) {
         Cart cart = new Cart();

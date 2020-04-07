@@ -52,7 +52,7 @@
         DELETE
         FROM CARTITEM
         WHERE CARTID = #{cartId}
-        AND   ITEMID = #{itemID}
+        AND   ITEMID = #{itemId}
     </delete>
 
     <delete id="deleteCartItemByCart">

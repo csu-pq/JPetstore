@@ -1,9 +1,7 @@
 package org.csu.mypetstore.controller;
 
-import org.csu.mypetstore.domain.Account;
-import org.csu.mypetstore.domain.Cart;
-import org.csu.mypetstore.domain.CartItem;
-import org.csu.mypetstore.domain.Order;
+import org.csu.mypetstore.domain.*;
+import org.csu.mypetstore.persistence.LineItemMapper;
 import org.csu.mypetstore.service.CartService;
 import org.csu.mypetstore.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +25,7 @@ public class OrderController {
     @Autowired
     private CartService cartService;
 
-
+//结账1
     @GetMapping("/newOrderForm")
     public String newOrderForm(Model model, HttpSession session) {
         Account account = (Account) session.getAttribute("account");
@@ -40,10 +38,10 @@ public class OrderController {
             Order order = new Order();
             order.initOrder(account, cart);
             session.setAttribute("order", order);
-            return "order/newOrder";
+            return "order/newOderForm";
         }
     }
-
+//结账2
     @PostMapping("/newOrder")
     public String newOrder(Order newOrder, String shippingAddressRequired, HttpSession session) {
         Order order = (Order) session.getAttribute("order");
@@ -65,30 +63,24 @@ public class OrderController {
             return "order/confirmOrder";
         }
     }
-
+//结账4
     @GetMapping("/confirmOrder")
     public String confirmOrder(Model model, HttpSession session) {
         Account account = (Account) session.getAttribute("account");
         Order order = (Order) session.getAttribute("order");
         orderService.insertOrder(order);
-
+        String cartId=cartService.getCart(account.getUsername()).getCartId();
         Cart cart = cartService.getCartByUsername(account.getUsername());
         Iterator<CartItem> cartItems = cart.getAllCartItems();
         while(cartItems.hasNext()) {
             CartItem cartItem = cartItems.next();
-            cartService.removeCartItem(cartItem, account);
+            String itemId=cartItem.getItemId();
+            cartService.removeCartItem(itemId, cartId);
         }
         return "order/viewOrder";
     }
 
-    @GetMapping("/viewListOrders")
-    public String viewListOrders(HttpSession session) {
-        Account account = (Account) session.getAttribute("account");
-        List<Order> orderList = orderService.getOrdersByUsername(account.getUsername());
-        session.setAttribute("orderList", orderList);
-        return "order/listOrder";
-    }
-
+//查看历史订单（完）
     @GetMapping("/viewOder")
     public String view(@SessionAttribute("account")Account account, Model model)
     {
@@ -97,17 +89,19 @@ public class OrderController {
         model.addAttribute("orderList",orderList);
         return "order/listOrders";
     }
-
+//查看某一历史订单（完）
     @GetMapping("/getOrderByOrderId")
     public String viewOrder(@SessionAttribute("account")Account account, String orderId,Model model)
     {
-        System.out.println(orderId);
         int intOrderId= Integer.parseInt(orderId);
         Order order=orderService.getOrder(intOrderId);
+        System.out.println(order.getUsername());
+
         model.addAttribute("order",order);
         model.addAttribute("account",account);
         return "order/viewOrderByOrderId";
     }
+    //结账3
     @PostMapping("/shipping")
     public String shipping(Order newOrder, HttpSession session) {
         Order order = (Order) session.getAttribute("order");

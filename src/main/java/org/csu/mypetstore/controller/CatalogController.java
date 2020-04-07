@@ -1,5 +1,6 @@
 package org.csu.mypetstore.controller;
 
+import org.csu.mypetstore.domain.Account;
 import org.csu.mypetstore.domain.Category;
 import org.csu.mypetstore.domain.Item;
 import org.csu.mypetstore.domain.Product;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpSession;
+import java.awt.image.PackedColorModel;
 import java.util.List;
 
 @Controller
@@ -21,15 +24,27 @@ public class CatalogController {
     private CatalogService catalogService;
 
     @GetMapping("index")
-    public String index() {
+    public String index(HttpSession session)
+    {
+        if(session.getAttribute("account")!=null)
+        {
+            Account account=(Account) session.getAttribute("account");
+            session.setAttribute("account", account);
+        }
         return "catalog/main";
     }
 
     @GetMapping("viewCategory")
-    public String viewCategory(String categoryId, Model model) {
+    public String viewCategory(String categoryId, Model model, HttpSession session) {
         if (categoryId != null) {
             List<Product> productList = catalogService.getProductListByCategory(categoryId);
             Category category = catalogService.getCategory(categoryId);
+
+            if(session.getAttribute("account")!=null)
+            {
+                Account account=(Account) session.getAttribute("account");
+                model.addAttribute("account", account);
+            }
             model.addAttribute("productList", productList);
             model.addAttribute("category", category);
         }
@@ -37,10 +52,15 @@ public class CatalogController {
     }
 
     @GetMapping("viewProduct")
-    public String viewProduct(String productId, Model model) {
+    public String viewProduct(String productId, Model model,HttpSession session) {
         if (productId != null) {
             List<Item> itemList = catalogService.getItemListByProduct(productId);
             Product product = catalogService.getProduct(productId);
+            if(session.getAttribute("account")!=null)
+            {
+                Account account=(Account)session.getAttribute("account");
+                model.addAttribute("account",account);
+            }
             model.addAttribute("product", product);
             model.addAttribute("itemList", itemList);
         }
@@ -48,36 +68,44 @@ public class CatalogController {
     }
 
     @GetMapping("viewItem")
-    public String viewItem(String itemId, Model model){
+    public String viewItem(String itemId, Model model,HttpSession session){
         Item item = catalogService.getItem(itemId);
         Product product = item.getProduct();
         processProductDescription(product);
+        if(session.getAttribute("account")!=null)
+        {
+            Account account=(Account)session.getAttribute("account");
+            model.addAttribute("account",account);
+        }
         model.addAttribute("item",item);
         model.addAttribute("product",product);
         return "catalog/item";
     }
 
     @PostMapping("searchProducts")
-    public String searchProducts(String keyword, Model model){
+    public String searchProducts(String keyword, Model model,HttpSession session){
         if(keyword == null || keyword.length() < 1){
             String msg = "Please enter a keyword to search for, then press the search button.";
+            if(session.getAttribute("account")!=null)
+            {
+                Account account=(Account)session.getAttribute("account");
+                model.addAttribute("account",account);
+            }
             model.addAttribute("msg",msg);
             return "common/error";
         }else {
             List<Product> productList = catalogService.searchProductList(keyword.toLowerCase());
             processProductDescription(productList);
+            if(session.getAttribute("account")!=null)
+            {
+                Account account=(Account)session.getAttribute("account");
+                model.addAttribute("account",account);
+            }
             model.addAttribute("productList",productList);
             return "catalog/searchProducts";
         }
 
     }
-
-    /*
-        解决Thymeleaf将数据库中的Product的描述(description属性)中的<image>标签解析成普通文本的问题。
-        本方法在Product中添加了imageURL属性，相当于将product的描述信息分成两部分处理了。
-        同样，界面上也是用了两个标签了，一个img标签和一个lable标签。
-        此方法是快速解决上述问题的临时方案，更好的方法应是更改数据库结构，将图片信息和普通文字描述信息分为两个字段存储。
-     */
     private void processProductDescription(Product product){
         String [] temp = product.getDescription().split("\"");
         product.setDescriptionImage(temp[1]);

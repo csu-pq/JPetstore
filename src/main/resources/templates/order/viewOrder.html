@@ -7,10 +7,153 @@
 </head>
 <body>
 <div th:replace="/common/top"></div>
+<ul class="messages">
+    <li>Thank you, your order has been submitted.</li>
+</ul>
 <div id="Content">
     <div id="BackLink">
         <a href="/catalog/index">Return to Main Menu</a>
     </div>
+    <table>
+        <tbody>
+        <tr>
+            <th align="center" colspan="2">Order #${sessionScope.time}</th>
+        </tr>
+        <tr>
+            <th colspan="2">Payment Details</th>
+        </tr>
+        <tr>
+            <td>Card Type:</td>
+            <td>${sessionScope.order.cardType}</td>
+        </tr>
+        <tr>
+            <td>Card Number:</td>
+            <td>${sessionScope.order.creditCard}</td>
+        </tr>
+        <tr>
+            <td>Expiry Date (MM/YYYY):</td>
+            <td>${sessionScope.order.expiryDate}</td>
+        </tr>
+        <tr>
+            <th colspan="2">Billing Address</th>
+        </tr>
+        <tr>
+            <td>First name:</td>
+            <td>${sessionScope.order.billToFirstName}</td>
+        </tr>
+        <tr>
+            <td>Last name:</td>
+            <td>${sessionScope.order.billToLastName}</td>
+        </tr>
+        <tr>
+            <td>Address 1:</td>
+            <td>${sessionScope.order.billAddress1}</td>
+        </tr>
+        <tr>
+            <td>Address 2:</td>
+            <td>${sessionScope.order.billAddress2}</td>
+        </tr>
+        <tr>
+            <td>City:</td>
+            <td>${sessionScope.order.billCity}</td>
+        </tr>
+        <tr>
+            <td>State:</td>
+            <td>${sessionScope.order.billState}</td>
+        </tr>
+        <tr>
+            <td>Zip:</td>
+            <td>${sessionScope.order.billZip}</td>
+        </tr>
+        <tr>
+            <td>Country:</td>
+            <td>${sessionScope.order.billCountry}</td>
+        </tr>
+        <tr>
+            <th colspan="2">Shipping Address</th>
+        </tr>
+        <tr>
+            <td>First name:</td>
+            <td>${sessionScope.order.shipToFirstName}</td>
+        </tr>
+        <tr>
+            <td>Last name:</td>
+            <td>${sessionScope.order.shipToLastName}</td>
+        </tr>
+        <tr>
+            <td>Address 1:</td>
+            <td>${sessionScope.order.shipAddress1}</td>
+        </tr>
+        <tr>
+            <td>Address 2:</td>
+            <td>${sessionScope.order.shipAddress2}</td>
+        </tr>
+        <tr>
+            <td>City:</td>
+            <td>${sessionScope.order.shipCity}</td>
+        </tr>
+        <tr>
+            <td>State:</td>
+            <td>${sessionScope.order.shipState}</td>
+        </tr>
+        <tr>
+            <td>Zip:</td>
+            <td>${sessionScope.order.shipZip}</td>
+        </tr>
+        <tr>
+            <td>Country:</td>
+            <td>${sessionScope.order.shipCountry}</td>
+        </tr>
+        <tr>
+            <td>Courier:</td>
+            <td>${sessionScope.order.courier}</td>
+        </tr>
+        <tr>
+            <td colspan="2">Status:${sessionScope.order.status}</td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <table>
+                    <tbody>
+                    <tr>
+                        <th>Item ID</th>
+                        <th>Description</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Total Cost</th>
+                    </tr>
+                    <c:forEach var="cartItem" items="${sessionScope.cart.cartItems}">
+                        <tr>
+                            <td>
+                                <a href="ViewItem?itemId=${cartItem.item.itemId}">${cartItem.item.itemId}</a>
+                            </td>
+                            <td>${cartItem.item.attribute1} ${cartItem.item.attribute2}
+                                ${cartItem.item.attribute3} ${cartItem.item.attribute4}
+                                ${cartItem.item.attribute5} ${cartItem.item.product.name}
+                            </td>
+                            <td>
+                                ${cartItem.quantity}
+                            </td>
+                            <td>
+                                <fmt:formatNumber value="${cartItem.item.listPrice}"
+                                                  pattern="$#,##0.00" />
+                            </td>
+                            <td>
+                                <fmt:formatNumber value="${cartItem.total}"
+                                                  pattern="$#,##0.00" />
+                            </td>
+                        </tr>
+                    </c:forEach>
+                    <tr>
+                        <th colspan="5">Total:$${sessionScope.order.totalPrice}</th>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
 
 </div>
 <div th:replace="/common/bottom"></div>

@@ -8,7 +8,149 @@
 <body>
 <div th:replace="/common/top"></div>
 <div id="Content">
-<!--    页面内容-->
+    <div id="BackLink">
+        <a href="/order/viewOder">Return to My Orders</a>
+    </div>
+    <div id="Catalog">
+        <table>
+            <tbody>
+            <tr>
+                <th align="center" colspan="2" th:text="'Order:'+${order.orderDate}"></th>
+            </tr>
+            <tr>
+                <th th:text="'OrderId:'+${order.orderId}"></th>
+            </tr>
+            <tr>
+                <th colspan="2">Payment Details</th>
+            </tr>
+            <tr>
+                <td>Card Type:</td>
+                <td th:text="${order.cardType}"></td>
+            </tr>
+            <tr>
+                <td>Card Number:</td>
+                <td th:text="${order.creditCard}"></td>
+            </tr>
+            <tr>
+                <td>Expiry Date (MM/YYYY):</td>
+                <td th:text="${order.expiryDate}"></td>
+            </tr>
+            <tr>
+                <th colspan="2">Billing Address</th>
+            </tr>
+            <tr>
+                <td>First name:</td>
+                <td th:text="${order.billToFirstName}">${sessionScope.order.billToFirstName}</td>
+            </tr>
+            <tr>
+                <td>Last name:</td>
+                <td th:text="${order.billToLastName}">${sessionScope.order.billToLastName}</td>
+            </tr>
+            <tr>
+                <td>Address 1:</td>
+                <td th:text="${order.billAddress1}">${sessionScope.order.billAddress1}</td>
+            </tr>
+            <tr>
+                <td>Address 2:</td>
+                <td th:text="${order.billAddress2}">${sessionScope.order.billAddress2}</td>
+            </tr>
+            <tr>
+                <td>City:</td>
+                <td th:text="${order.billCity}">${sessionScope.order.billCity}</td>
+            </tr>
+            <tr>
+                <td>State:</td>
+                <td th:text="${order.billState}">${sessionScope.order.billState}</td>
+            </tr>
+            <tr>
+                <td>Zip:</td>
+                <td th:text="${order.billZip}">${sessionScope.order.billZip}</td>
+            </tr>
+            <tr>
+                <td>Country:</td>
+                <td th:text="${order.billCountry}">${sessionScope.order.billCountry}</td>
+            </tr>
+            <tr>
+                <th colspan="2">Shipping Address</th>
+            </tr>
+            <tr>
+                <td>First name:</td>
+                <td th:text="${order.shipToFirstName}">${sessionScope.order.shipToFirstName}</td>
+            </tr>
+            <tr>
+                <td>Last name:</td>
+                <td th:text="${order.shipToLastName}">${sessionScope.order.shipToLastName}</td>
+            </tr>
+            <tr>
+                <td>Address 1:</td>
+                <td th:text="${order.shipAddress1}">${sessionScope.order.shipAddress1}</td>
+            </tr>
+            <tr>
+                <td>Address 2:</td>
+                <td th:text="${order.shipAddress2}">${sessionScope.order.shipAddress2}</td>
+            </tr>
+            <tr>
+                <td>City:</td>
+                <td th:text="${order.shipCity}">${sessionScope.order.shipCity}</td>
+            </tr>
+            <tr>
+                <td>State:</td>
+                <td th:text="${order.shipState}">${sessionScope.order.shipState}</td>
+            </tr>
+            <tr>
+                <td>Zip:</td>
+                <td th:text="${order.shipZip}">${sessionScope.order.shipZip}</td>
+            </tr>
+            <tr>
+                <td>Country:</td>
+                <td th:text="${order.shipCountry}">${sessionScope.order.shipCountry}</td>
+            </tr>
+            <tr>
+                <td>Courier:</td>
+                <td th:text="${order.courier}">${sessionScope.order.courier}</td>
+            </tr>
+            <tr>
+                <td colspan="2" th:text="${order.status}">Status:${sessionScope.order.status}</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <th>Item ID</th>
+                            <th>Description</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total Cost</th>
+                        </tr>
+                            <tr th:each="lineItem:${order.getLineItems()}">
+                                <td>
+                                    <a href="/catalog/viewItem?itemId=${lineItem.getItemId()}" th:text="${lineItem.getItemId()}">${lineItem.getItemId()}</a>
+                                </td>
+                                <td th:text="${lineItem.item.attribute1}">${lineItem.item.attribute1} ${lineItem.item.attribute2}
+                                    ${lineItem.item.attribute3} ${lineItem.item.attribute4}
+                                    ${lineItem.item.attribute5} ${lineItem.item.product.name}
+                                </td>
+                                <td th:text="${lineItem.quantity}">
+                                    ${lineItem.quantity}
+                                </td>
+                                <td th:text="'$:'+${lineItem.unitPrice}">
+                                </td>
+                                <td th:text="'$:'+${lineItem.quantity}*${lineItem.unitPrice}">
+                                </td>
+                            </tr>
+                        <tr>
+                            <th colspan="5" th:text="'Total:$'+${order.totalPrice}"></th>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+
+    </div>
 </div>
 <div th:replace="/common/bottom"></div>
 </body>

@@ -80,5 +80,4 @@ public class OrderService {
         sequenceMapper.updateSequence(parameterObject);
         return sequence.getNextId();
     }
-
 }
