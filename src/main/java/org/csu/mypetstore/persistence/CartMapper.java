@@ -21,4 +21,6 @@ public interface CartMapper {
     void removeCartItem(Map<String, Object> map);
 
     List<CartItem> getCartItemListByUsername(String username);
+
+    List<CartItem> getCartItemListByCartId(String cartId);
 }

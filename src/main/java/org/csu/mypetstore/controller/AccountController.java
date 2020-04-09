@@ -7,6 +7,7 @@ import org.csu.mypetstore.domain.VerificationCode;
 import org.csu.mypetstore.service.CatalogService;
 import org.csu.mypetstore.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.csu.mypetstore.service.AccountService;
 import org.springframework.ui.Model;
@@ -34,29 +35,31 @@ public class AccountController {
     }
 
     @PostMapping("/signOn")
-    public String signOn(@SessionAttribute("code")String rightCode, String username, String password, String inputCode, Model model) {
+    public String signOn(@SessionAttribute("code")String rightCode, String username, String password, String inputCode,Model model,HttpSession session) {
         Account account = accountService.getAccount(username, DigestUtils.md5DigestAsHex(password.getBytes()));
 
         if(account==null)
         {
-            model.addAttribute("msg","用户名或密码错误");
+            session.setAttribute("msg","用户名或密码错误");
             return "account/signOnForm";
         }
         else if(!inputCode.equals(rightCode))
         {
-            model.addAttribute("msg","验证码错误");
+            session.setAttribute("msg","验证码错误");
             return "account/signOnForm";
         }
         else
         {
+            session.setAttribute("account",account);
             model.addAttribute("account",account);
             return "catalog/main";
         }
     }
 
     @GetMapping("/signOff")
-    public String signOff(Model model)
+    public String signOff(HttpSession session,Model model)
     {
+        session.setAttribute("account",null);
         model.addAttribute("account",null);
         return "catalog/main";
     }
@@ -69,7 +72,7 @@ public class AccountController {
     }
 
     @PostMapping("/editAccount")
-    public String editAccount(Account account,String repeatedPassword,Model model)
+    public String editAccount(Account account,String repeatedPassword,Model model,HttpSession session)
     {
         if (account.getPassword() == null || account.getPassword().length() == 0 || repeatedPassword == null || repeatedPassword.length() == 0) {
             String msg = "密码不能为空";
@@ -82,6 +85,7 @@ public class AccountController {
         } else {
             account.setPassword(DigestUtils.md5DigestAsHex(account.getPassword().getBytes()));
             accountService.updateAccount(account);
+            session.setAttribute("account",account);
             model.addAttribute("account", account);
             return "catalog/main";
         }
@@ -96,9 +100,9 @@ public class AccountController {
     }
 
     @PostMapping("/newAccount")
-    public String newAccount(@SessionAttribute("code")String code, Account account,String repeatedPassword,String inputCode,Model model)
+    public String newAccount(@SessionAttribute("code")String code, Account account,String repeatedPassword,String inputCode,Model model,HttpSession session)
     {
-        //通过输入的用户名查找是否有改用户
+        //通过输入的用户名查找是否有改用户名
         Account newAccount=accountService.getAccount(account.getUsername());
         if(newAccount!=null)
         {
@@ -115,7 +119,6 @@ public class AccountController {
             model.addAttribute("msg", msg);
             return "account/newAccountForm";
         }
-
         //验证码错误
         else if(!code.equals(inputCode))
         {
@@ -127,6 +130,7 @@ public class AccountController {
         {
             account.setPassword(DigestUtils.md5DigestAsHex(account.getPassword().getBytes()));
             accountService.insertAccount(account);
+            session.setAttribute("account",account);
             model.addAttribute("account", account);
             return "catalog/main";
         }

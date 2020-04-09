@@ -27,7 +27,7 @@
         WHERE P.PRODUCTID = I.PRODUCTID
         AND I.ITEMID = V.ITEMID
         AND CI.ITEMID = I.ITEMID
-        AND CI.USERNAME = #{value}
+        AND CI.CARTID = #{value}
     </select>
     <select id="getCartByUsername"  resultType="Cart">
         SELECT

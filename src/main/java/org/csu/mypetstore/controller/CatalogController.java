@@ -24,14 +24,20 @@ public class CatalogController {
     private CatalogService catalogService;
 
     @GetMapping("index")
-    public String index(HttpSession session)
+    public String index(Model model,HttpSession session)
     {
-        if(session.getAttribute("account")!=null)
+        if(session.getAttribute("account")==null)
         {
-            Account account=(Account) session.getAttribute("account");
-            session.setAttribute("account", account);
+            model.addAttribute("account",null);
+            return "catalog/main";
         }
-        return "catalog/main";
+        else
+        {
+            Account account=(Account)session.getAttribute("account");
+            model.addAttribute("account",account);
+            session.setAttribute("account",account);
+            return "catalog/main";
+        }
     }
 
     @GetMapping("viewCategory")

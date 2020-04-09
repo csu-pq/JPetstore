@@ -49,11 +49,10 @@ public class CartService {
         return cartMapper.getCartByUsername(username);
     }
 
-    //获取购物车中的所有的商品
-    //返回一个根据category排好序的序列
+    //获取购物车中的所有的商品(完)
     public List<CartItem> getCartItemList(String cartId)
     {
-        List<CartItem> cartItemList =  cartItemMapper.getCartItemList(cartId);
+        List<CartItem> cartItemList =  cartMapper.getCartItemListByCartId(cartId);
         return cartItemList;
     }
 
@@ -79,7 +78,7 @@ public class CartService {
             }
 
         }
-        else if(cartItem != null)
+        else
         {
             cartItemMapper.deleteCartItem(cartId, itemId);
         }

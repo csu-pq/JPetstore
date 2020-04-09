@@ -5,16 +5,17 @@ import org.csu.mypetstore.persistence.LineItemMapper;
 import org.csu.mypetstore.service.CartService;
 import org.csu.mypetstore.service.CatalogService;
 import org.csu.mypetstore.service.OrderService;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.model.IModel;
 
+import javax.jws.WebParam;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -29,70 +30,175 @@ public class OrderController {
     @Autowired
     private CatalogService catalogService;
 
-//结账1
+//结账1(完)
     @GetMapping("/newOrderForm")
-    public String newOrderForm(Model model, HttpSession session) {
-        Account account = (Account) session.getAttribute("account");
+    public String newOrderForm(@SessionAttribute("account")Account account, Model model,HttpSession session) {
+        Cart cart=cartService.getCart(account.getUsername());
+        String cartId=cart.getCartId();
+        List<CartItem> cartItemList=cartService.getCartItemList(cartId);
+        cart.setTotal(cartService.getCartTotalCost(cartId));
 
-        if (account == null) {
-            model.addAttribute("accountMsg", "You must sign on before attempting to check out.  Please sign on and try checking out again.");
-            return "account/signOnForm";
-        } else {
-            Cart cart = cartService.getCartByUsername(account.getUsername());
-            Iterator<CartItem> cartItems = cart.getAllCartItems();
-            List<String> outOfStockItems = new ArrayList<>();
-            while(cartItems.hasNext()) {
-                CartItem cartItem = cartItems.next();
-                if (cartItem.getQuantity() > catalogService.getItemInventoryQuantity(cartItem.getItem().getItemId()))
-                    outOfStockItems.add(cartItem.getItem().getItemId());
-            }
-            if (outOfStockItems.size() > 0) {
+        List<String> outOfStockItems = new ArrayList<>();
+        for (CartItem cartItem : cartItemList) {
+            if (!cartItem.isInStock())
+                outOfStockItems.add(cartItem.getItem().getItemId());
+        }
+        if (outOfStockItems.size() > 0) {
                 model.addAttribute("outOfStockMsg", "The item(s) " + outOfStockItems.toString() + " is(are) out of stock.");
                 model.addAttribute("cart", cart);
+                model.addAttribute("account",account);
+                model.addAttribute("cartItemList",cartItemList);
                 return "cart/cart";
-            }
-            Order order = new Order();
-            order.initOrder(account, cart);
-            session.setAttribute("order", order);
-            return "order/newOderForm";
         }
+        Order order= new Order();
+        Order newOrder=new Order();
+        newOrder.initOrder(account, cart);
+        //发货日期
+        Calendar calendar = Calendar.getInstance();
+        int month=calendar.get(Calendar.MONTH)+1;
+        int date=calendar.get(Calendar.DATE);
+        order.setExpiryDate(month+"/"+date);
+        newOrder.setExpiryDate(month+"/"+date);
+        //默认设置
+        order.setBillToFirstName(account.getFirstName());
+        order.setBillToLastName(account.getLastName());
+        order.setBillAddress1(account.getAddress1());
+        order.setBillAddress2(account.getAddress2());
+        order.setBillCity(account.getCity());
+        order.setBillCountry(account.getCountry());
+        order.setBillState(account.getState());
+        order.setBillZip(account.getZip());
+        order.setCreditCard("999 9999 9999 9999");
+
+        model.addAttribute("order",order);
+        model.addAttribute("account",account);
+        session.setAttribute("newOrder",newOrder);
+        return "order/newOderForm";
     }
 //结账2
     @PostMapping("/newOrder")
-    public String newOrder(Order newOrder, String shippingAddressRequired, HttpSession session) {
-        Order order = (Order) session.getAttribute("order");
-        order.setCardType(newOrder.getCardType());
-        order.setCreditCard(newOrder.getCreditCard());
-        order.setExpiryDate(newOrder.getExpiryDate());
-        order.setBillToFirstName(newOrder.getBillToFirstName());
-        order.setBillToLastName(newOrder.getBillToLastName());
-        order.setBillAddress1(newOrder.getBillAddress1());
-        order.setBillAddress2(newOrder.getBillAddress2());
-        order.setBillCity(newOrder.getBillCity());
-        order.setBillState(newOrder.getBillState());
-        order.setBillZip(newOrder.getBillZip());
-        order.setBillCountry(newOrder.getBillCountry());
+    public String newOrder(@SessionAttribute("account")Account account,@SessionAttribute("newOrder")Order newOrder, Order order, String shippingAddressRequired, Model model,HttpSession session) {
+        if(shippingAddressRequired!=null && shippingAddressRequired.equals("false")) {
+            //复制
+            newOrder.setBillToFirstName(order.getBillToFirstName());
+            newOrder.setBillToLastName(order.getBillToLastName());
+            newOrder.setBillAddress1(order.getBillAddress1());
+            newOrder.setBillAddress2(order.getBillAddress2());
+            newOrder.setBillCity(order.getBillCity());
+            newOrder.setBillCountry(order.getBillCountry());
+            newOrder.setBillState(order.getBillState());
+            newOrder.setBillZip(order.getBillZip());
 
-        if(shippingAddressRequired!=null && shippingAddressRequired.equals("1")) {
+            //默认设置
+            order.setShipAddress1(account.getAddress1());
+            order.setShipAddress2(account.getAddress2());
+            order.setShipCity(account.getCity());
+            order.setShipCountry(account.getCountry());
+            order.setShipToFirstName(account.getFirstName());
+            order.setShipToLastName(account.getLastName());
+            order.setShipState(account.getState());
+            order.setShipZip(account.getZip());
+
+            session.setAttribute("account",account);
+            model.addAttribute("order",order);
+            session.setAttribute("newOrder",newOrder);
+
             return "order/shipping";
         } else {
+            //复制
+            newOrder.setBillToFirstName(order.getBillToFirstName());
+            newOrder.setBillToLastName(order.getBillToLastName());
+            newOrder.setBillAddress1(order.getBillAddress1());
+            newOrder.setBillAddress2(order.getBillAddress2());
+            newOrder.setBillCity(order.getBillCity());
+            newOrder.setBillCountry(order.getBillCountry());
+            newOrder.setBillState(order.getBillState());
+            newOrder.setBillZip(order.getBillZip());
+            //复制
+            newOrder.setShipAddress1(account.getAddress1());
+            newOrder.setShipAddress2(account.getAddress2());
+            newOrder.setShipCity(account.getCity());
+            newOrder.setShipCountry(account.getCountry());
+            newOrder.setShipToFirstName(account.getFirstName());
+            newOrder.setShipToLastName(account.getLastName());
+            newOrder.setShipState(account.getState());
+            newOrder.setShipZip(account.getZip());
+
+            //订单号
+            Calendar now1 = Calendar.getInstance();
+            int day=now1.get(Calendar.DAY_OF_MONTH);
+            int hour=now1.get(Calendar.HOUR_OF_DAY);
+            int min=now1.get(Calendar.MINUTE);
+            int sec=now1.get(Calendar.SECOND);
+            int orderid= (int) (sec+min*Math.pow(10,2)+hour*Math.pow(10,4)+day*Math.pow(10,6));
+            newOrder.setOrderId(orderid);
+            //放入商品
+            Cart cart=cartService.getCart(account.getUsername());
+            String cartId=cart.getCartId();
+            List<CartItem>cartItemList=cartService.getCartItemList(cartId);
+            for(int i=0;i<cartItemList.size();i++)
+            {
+                newOrder.addLineItem(cartItemList.get(i));
+            }
+            model.addAttribute("newOrder",newOrder);
+            session.setAttribute("account",account);
+            session.setAttribute("newOrder",newOrder);
             return "order/confirmOrder";
         }
     }
-//结账4
-    @GetMapping("/confirmOrder")
-    public String confirmOrder(Model model, HttpSession session) {
-        Account account = (Account) session.getAttribute("account");
-        Order order = (Order) session.getAttribute("order");
-        orderService.insertOrder(order);
-        String cartId=cartService.getCart(account.getUsername()).getCartId();
-        Cart cart = cartService.getCartByUsername(account.getUsername());
-        Iterator<CartItem> cartItems = cart.getAllCartItems();
-        while(cartItems.hasNext()) {
-            CartItem cartItem = cartItems.next();
-            String itemId=cartItem.getItemId();
-            cartService.removeCartItem(itemId, cartId);
+    //结账3
+    @PostMapping("/shipping")
+    public String shipping(@SessionAttribute("account")Account account,@SessionAttribute("newOrder")Order newOrder, Order order,Model model,HttpSession session) {
+        //复制
+        newOrder.setShipAddress1(order.getShipAddress1());
+        newOrder.setShipAddress2(order.getShipAddress2());
+        newOrder.setShipCity(order.getShipCity());
+        newOrder.setShipCountry(order.getShipCountry());
+        newOrder.setShipToFirstName(order.getShipToFirstName());
+        newOrder.setShipToLastName(order.getShipToLastName());
+        newOrder.setShipState(order.getShipState());
+        newOrder.setShipZip(order.getShipZip());
+        //订单号
+        Calendar now1 = Calendar.getInstance();
+        int day=now1.get(Calendar.DAY_OF_MONTH);
+        int hour=now1.get(Calendar.HOUR_OF_DAY);
+        int min=now1.get(Calendar.MINUTE);
+        int sec=now1.get(Calendar.SECOND);
+        int orderid= (int) (sec+min*Math.pow(10,2)+hour*Math.pow(10,4)+day*Math.pow(10,6));
+        newOrder.setOrderId(orderid);
+        //放入商品
+        Cart cart=cartService.getCart(account.getUsername());
+        String cartId=cart.getCartId();
+        List<CartItem>cartItemList=cartService.getCartItemList(cartId);
+        for(int i=0;i<cartItemList.size();i++)
+        {
+            newOrder.addLineItem(cartItemList.get(i));
         }
+        model.addAttribute("newOrder",newOrder);
+        session.setAttribute("newOrder",newOrder);
+        model.addAttribute("account",account);
+        return "order/confirmOrder";
+    }
+//结账4
+    @GetMapping("/viewOrder")
+    public String confirmOrder(@SessionAttribute("account")Account account,@SessionAttribute("newOrder")Order newOrder,Model model, HttpSession session) {
+        //插入订单
+        Cart cart=cartService.getCart(account.getUsername());
+        String cartId=cart.getCartId();
+        cart.setTotal(cartService.getCartTotalCost(cartId));
+        newOrder.setTotalPrice(cartService.getCartTotalCost(cartId));
+        orderService.insertOrder(newOrder);
+        //删除购物车商品
+        List <CartItem>cartItemList=cartService.getCartItemList(cartId);
+        for (CartItem item : cartItemList) {
+            cartService.removeCartItem(item.getItem().getItemId(), cartId);
+        }
+
+        model.addAttribute("cartItemList",cartItemList);
+        model.addAttribute("newOrder",newOrder);
+        model.addAttribute("account",account);
+        session.setAttribute("newOrder",newOrder);
+        session.setAttribute("account",account);
         return "order/viewOrder";
     }
 //查看历史订单（完）
@@ -101,15 +207,6 @@ public class OrderController {
         List<Order> orderList = orderService.getOrdersByUsername(account.getUsername());
         model.addAttribute("account",account);
         model.addAttribute("orderList", orderList);
-        return "order/listOrders";
-    }
-//查看刚完成的订单
-    @GetMapping("/viewOder")
-    public String view(@SessionAttribute("account")Account account, Model model)
-    {
-        List<Order> orderList=orderService.getOrdersByUsername(account.getUsername());
-        model.addAttribute("account",account);
-        model.addAttribute("orderList",orderList);
         return "order/listOrders";
     }
 //查看某一历史订单（完）
@@ -124,22 +221,4 @@ public class OrderController {
         model.addAttribute("account",account);
         return "order/viewOrderByOrderId";
     }
-    //结账3
-    @PostMapping("/shipping")
-    public String shipping(Order newOrder, HttpSession session) {
-        Order order = (Order) session.getAttribute("order");
-        order.setShipToFirstName(newOrder.getShipToFirstName());
-        order.setShipToLastName(newOrder.getShipToLastName());
-        order.setShipAddress1(newOrder.getShipAddress1());
-        order.setShipAddress2(newOrder.getShipAddress2());
-        order.setShipCity(newOrder.getShipCity());
-        order.setShipState(newOrder.getShipState());
-        order.setShipZip(newOrder.getShipZip());
-        order.setShipCountry(newOrder.getShipCountry());
-
-        session.setAttribute("order", order);
-        return "order/confirmOrder";
-    }
-
-
 }

@@ -8,9 +8,91 @@
 <body>
 <div th:replace="/common/top"></div>
 <div id="Content">
-    <!--    页面内容-->
-
-
+    <div id="Catalog">
+    Please confirm the information below...
+    <table>
+        <tbody>
+        <tr>
+            <th align="center" colspan="2"><font size="4"><b>Order:</b></font>
+                <font size="3">
+                    <b th:text="${newOrder.orderId}">
+                    </b>
+                </font></th>
+        </tr>
+        <tr>
+            <th colspan="2">Billing Address</th>
+        </tr>
+        <tr>
+            <td>First name:</td>
+            <td th:text="${newOrder.billToFirstName}"></td>
+        </tr>
+        <tr>
+            <td>Last name:</td>
+            <td th:text="${newOrder.billToLastName}"></td>
+        </tr>
+        <tr>
+            <td>Address 1:</td>
+            <td th:text="${newOrder.billAddress1}"></td>
+        </tr>
+        <tr>
+            <td>Address 2:</td>
+            <td th:text="${newOrder.billAddress2}"></td>
+        </tr>
+        <tr>
+            <td>City:</td>
+            <td th:text="${newOrder.billCity}"></td>
+        </tr>
+        <tr>
+            <td>State:</td>
+            <td th:text="${newOrder.billState}"></td>
+        </tr>
+        <tr>
+            <td>Zip:</td>
+            <td th:text="${newOrder.billZip}"></td>
+        </tr>
+        <tr>
+            <td>Country:</td>
+            <td th:text="${newOrder.billCountry}"></td>
+        </tr>
+        <tr>
+            <th colspan="2">Shipping Address</th>
+        </tr>
+        <tr>
+            <td>First name:</td>
+            <td th:text="${newOrder.shipToFirstName}"></td>
+        </tr>
+        <tr>
+            <td>Last name:</td>
+            <td th:text="${newOrder.shipToLastName}"></td>
+        </tr>
+        <tr>
+            <td>Address 1:</td>
+            <td th:text="${newOrder.shipAddress1}"></td>
+        </tr>
+        <tr>
+            <td>Address 2:</td>
+            <td th:text="${newOrder.shipAddress2}"></td>
+        </tr>
+        <tr>
+            <td>City:</td>
+            <td th:text="${newOrder.shipCity}"></td>
+        </tr>
+        <tr>
+            <td>State:</td>
+            <td th:text="${newOrder.shipState}"></td>
+        </tr>
+        <tr>
+            <td>Zip:</td>
+            <td th:text="${newOrder.shipZip}"></td>
+        </tr>
+        <tr>
+            <td>Country:</td>
+            <td th:text="${newOrder.shipCountry}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <a class="Button" href="/order/viewOrder">Confirm</a>
+    </div>
 </div>
 <div th:replace="/common/bottom"></div>
 </body>

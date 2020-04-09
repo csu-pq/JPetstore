@@ -7,51 +7,53 @@
 </head>
 <body>
 <div th:replace="/common/top"></div>
-<form action="/order/confirmOrder" method="post">
-
-    <table>
-        <tr>
-            <th colspan=2>Shipping Address</th>
-        </tr>
-
-        <tr>
-            <td>First name:</td>
-            <td><input type="text" name="order.shipToFirstName" /></td>
-        </tr>
-        <tr>
-            <td>Last name:</td>
-            <td><input type="text" name="order.shipToLastName" /></td>
-        </tr>
-        <tr>
-            <td>Address 1:</td>
-            <td><input type="text" size="40" name="order.shipAddress1" /></td>
-        </tr>
-        <tr>
-            <td>Address 2:</td>
-            <td><input type="text" size="40" name="order.shipAddress2" /></td>
-        </tr>
-        <tr>
-            <td>City:</td>
-            <td><input type="text" name="order.shipCity" /></td>
-        </tr>
-        <tr>
-            <td>State:</td>
-            <td><input type="text" size="4" name="order.shipState" /></td>
-        </tr>
-        <tr>
-            <td>Zip:</td>
-            <td><input type="text" size="10" name="order.shipZip" /></td>
-        </tr>
-        <tr>
-            <td>Country:</td>
-            <td><input type="text" size="15" name="order.shipCountry" /></td>
-        </tr>
-
-
-    </table>
-
-    <input type="submit" name="newOrder" value="Continue" />
-</form>
+<div id="Content">
+    <div id="Catalog">
+        <form action="/order/shipping" method="post" th:object="${order}">
+            <table>
+                <tbody>
+                <tr>
+                    <th colspan=2>Shipping Address</th>
+                </tr>
+                <tr>
+                    <td>First name:</td>
+                    <td>
+                        <input th:field="*{shipToFirstName}" type="text">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Last name:</td>
+                    <td><input th:field="*{shipToLastName}" type="text" ></td>
+                </tr>
+                <tr>
+                    <td>Address 1:</td>
+                    <td><input size="40" th:field="*{shipAddress1}" type="text" ></td>
+                </tr>
+                <tr>
+                    <td>Address 2:</td>
+                    <td><input size="40" th:field="*{shipAddress2}" type="text" ></td>
+                </tr>
+                <tr>
+                    <td>City:</td>
+                    <td><input th:field="*{shipCity}" type="text" ></td>
+                </tr>
+                <tr>
+                    <td>State:</td>
+                    <td><input th:field="*{shipState}" type="text" ></td>
+                <tr>
+                    <td>Zip:</td>
+                    <td><input size="10" th:field="*{shipZip}" type="text" ></td>
+                </tr>
+                <tr>
+                    <td>Country:</td>
+                    <td><input type="text" size="15" th:field="*{shipCountry}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <input type="submit" name="shipping" value="Continue" >
+        </form>
+    </div>
+</div>
 <div th:replace="/common/bottom"></div>
 </body>
 </html>

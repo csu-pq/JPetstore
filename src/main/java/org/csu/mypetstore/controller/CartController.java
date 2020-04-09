@@ -37,48 +37,65 @@ public class CartController {
 
 //进入购物车界面（完）
     @GetMapping("viewCart")
-    public String viewCart(@SessionAttribute("account")Account account, Model model){
-        cart=cartService.getCart(account.getUsername());
-        String cartId=cart.getCartId();
-        cart.setTotal(cartService.getCartTotalCost(cartId));
+    public String viewCart( Model model,HttpSession session){
+        if(session.getAttribute("account")==null)
+        {
+           model.addAttribute("msg","请先登陆！");
+           return "account/signOnForm";
+        }
+        else
+        {
+            Account account=(Account)session.getAttribute("account");
+            cart=cartService.getCart(account.getUsername());
+            String cartId=cart.getCartId();
+            cart.setTotal(cartService.getCartTotalCost(cartId));
 
-        List <CartItem> cartItemList=cartService.getCartItemList(cartId);
-        model.addAttribute("account",account);
-        model.addAttribute("cart",cart);
-        model.addAttribute("cartItemList",cartItemList);
-        return "cart/cart";
+            List <CartItem> cartItemList=cartService.getCartItemList(cartId);
+
+            model.addAttribute("account",account);
+            model.addAttribute("cart",cart);
+            model.addAttribute("cartItemList",cartItemList);
+            return "cart/cart";
+        }
     }
 
 //添加商品跳往购物车界面(完)
     @GetMapping("addItemToCart")
-    public String addItemToCart(@SessionAttribute("account") Account account, String workingItemId, Model model){
-        cart=cartService.getCart(account.getUsername());
-        if(cart==null)//购物车为空则新建
+    public String addItemToCart( String workingItemId, Model model,HttpSession session){
+        if(session.getAttribute("account")==null)
         {
-            cartService.creatCart(account.getUsername());
-            cart=cartService.getCart(account.getUsername());
-            String cartId=cart.getCartId();
-            //是否有库存
-            boolean inStock=catalogService.isItemInStock(workingItemId);
-            cartService.addItem(cartId,workingItemId);
-            List<CartItem> cartItemList=cart.getCartItemList();
-            model.addAttribute("cart",cart);
-            model.addAttribute("account",account);
-            model.addAttribute("cartItemList",cartItemList);
-            return "cart/cart";
+            model.addAttribute("msg","请先登陆！");
+            return "account/signOnForm";
         }
-        else//不为空直接添加
+        else
         {
-            boolean inStock=true;
-            //boolean inStock=catalogService.isItemInStock(workingItemId);
-            String cartId=cart.getCartId();
-            cartService.addItem(cartId,workingItemId);
-            cart.setTotal(cartService.getCartTotalCost(cartId));
-            List <CartItem> cartItemList=cartService.getCartItemList(cartId);
-            model.addAttribute("account",account);
-            model.addAttribute("cart",cart);
-            model.addAttribute("cartItemList",cartItemList);
-            return "cart/cart";
+            Account account=(Account)session.getAttribute("account");
+            cart=cartService.getCart(account.getUsername());
+            if(cart==null)//购物车为空则新建
+            {
+                cartService.creatCart(account.getUsername());
+                cart=cartService.getCart(account.getUsername());
+                String cartId=cart.getCartId();
+
+                cartService.addItem(cartId,workingItemId);
+                List<CartItem> cartItemList=cart.getCartItemList();
+
+                model.addAttribute("cart",cart);
+                model.addAttribute("account",account);
+                model.addAttribute("cartItemList",cartItemList);
+                return "cart/cart";
+            }
+            else//不为空直接添加
+            {
+                String cartId=cart.getCartId();
+                cartService.addItem(cartId,workingItemId);
+                cart.setTotal(cartService.getCartTotalCost(cartId));
+                List <CartItem> cartItemList=cartService.getCartItemList(cartId);
+                model.addAttribute("account",account);
+                model.addAttribute("cart",cart);
+                model.addAttribute("cartItemList",cartItemList);
+                return "cart/cart";
+            }
         }
     }
 //移除商品(完)
@@ -125,28 +142,24 @@ public class CartController {
     //更新购物车（完）
     @PostMapping("/updateCart")
     public String updateCart(Model model, HttpServletRequest request, HttpSession session) {
-        //Account account = (Account) session.getAttribute("account");
-        //Cart cart = cartService.getCart(account.getUsername());
         Account account=(Account) session.getAttribute("account");
         Cart cart=cartService.getCart(account.getUsername());
         String[] quantities =request.getParameterValues("quantity");
 
         String cartId=cart.getCartId();
 
-        System.out.println("cratId："+ cartId);
-
         List<CartItem> cartItemList=cartService.getCartItemList(cartId);
         int num=0;
         while (num<cartItemList.size()){
             int qua=Integer.parseInt(quantities[num]);
-            String itemId=cartItemList.get(num).getItemId();
+            String itemId=cartItemList.get(num).getItem().getItemId();
+
             cartService.updateCartItemQuantity(cartId,itemId,qua);
             num++;
         }
         cart.setTotal(cartService.getCartTotalCost(cartId));
 
         List <CartItem> cartItemList1=cartService.getCartItemList(cartId);
-        System.out.println(cartItemList.size());
         model.addAttribute("account",account);
         model.addAttribute("cart",cart);
         model.addAttribute("cartItemList",cartItemList1);
