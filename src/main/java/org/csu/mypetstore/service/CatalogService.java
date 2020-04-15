@@ -55,4 +55,42 @@ public class CatalogService {
     public int getItemInventoryQuantity(String itemId) {
         return itemMapper.getInventoryQuantity(itemId);
     }
+
+    public List<Category> getCategoryList() {
+        return categoryMapper.getCategoryList();
+    }
+    /**************************分割线***********************************/
+
+    public void addCategory(Category category){ categoryMapper.addCategory(category); }
+
+    public void updateCategory(Category category){
+        categoryMapper.updateCategory(category);
+    }
+
+    public void deleteCategory(String categoryId){ categoryMapper.deleteCategory(categoryId); }
+
+    public void addProduct(Product product){ productMapper.addProduct(product);}
+
+    public void updateProduct(Product product){ productMapper.updateProduct(product);}
+
+    public void deleteProduct(String productId){ productMapper.deleteProduct(productId);}
+
+    public void addItem(Item item){
+        itemMapper.addItem(item);
+        itemMapper.addItemInventory(item);
+    }
+
+    public void updateItem(Item item){
+        itemMapper.updateItem(item);
+        itemMapper.updateItemInventory(item);
+    }
+
+    public void deleteItem(String itemId){
+        itemMapper.deleteItem(itemId);
+        itemMapper.deleteItemInventory(itemId);
+    }
+
+    public List<Item> getAllItem(){
+        return itemMapper.getAllItem();
+    }
 }

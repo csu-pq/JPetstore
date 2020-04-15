@@ -1,5 +1,7 @@
 package org.csu.mypetstore;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.csu.mypetstore.domain.*;
 import org.csu.mypetstore.service.AccountService;
 import org.csu.mypetstore.service.CartService;
@@ -108,6 +110,14 @@ class MypetstoreApplicationTests {
         cartService.addItem("1000","EST-1");
         CartItem cartItem = cartService.getCartItem("1000","EST-1");
         System.out.println(cartItem.getCartId()+", "+cartItem.getCategoryId()+","+cartItem.getItem().getProductId()+","+cartItem.getItemId()+", "+cartItem.getQuantity());
+    }
+
+    @Test
+    void testPageInfo(){
+        PageHelper.startPage(1, 3);
+        List<Category> categoryList= catalogService.getCategoryList();
+        PageInfo<Category> pageInfo = new PageInfo<>(categoryList);
+        System.out.print(pageInfo);
     }
 
 

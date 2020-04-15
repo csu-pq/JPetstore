@@ -22,4 +22,18 @@ public interface ItemMapper {
     void setItemStatusN(String itemId);
 
     void updateInventoryQuantity(String itemId, int quantity);
+
+    void addItem(Item item);
+
+    void addItemInventory(Item item);
+
+    void updateItem(Item item);
+
+    void updateItemInventory(Item item);
+
+    void deleteItem(String itemId);
+
+    void deleteItemInventory(String itemId);
+
+    List<Item> getAllItem();
 }
