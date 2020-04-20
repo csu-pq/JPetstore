@@ -11,4 +11,18 @@
         FROM CATEGORY
         WHERE CATID = #{categoryId}
     </select>
+    <insert id="addCategory" parameterType="Category">
+        INSERT INTO Category
+             (CATID, NAME, DESCN)
+        VALUES (#{categoryId}, #{name }, #{description})
+    </insert>
+    <update id="updateCategory" parameterType="Category">
+        UPDATE category SET
+             NAME = #{name },
+             DESCN = #{description}
+        WHERE CATID = #{categoryId}
+    </update>
+    <delete id="deleteCategory" parameterType="string">
+        DELETE FROM category where CATID = #{categoryId}
+    </delete>
 </mapper>

@@ -11,6 +11,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @SpringBootTest
@@ -53,24 +54,24 @@ class MypetstoreApplicationTests {
     private void printInfo(Product product){
         System.out.println(product.getCategoryId()+","+product.getProductId()+","+product.getName()+","+product.getDescription());
     }
-    @Test
-    void testItem(){
-        Item item = catalogService.getItem("EST-18");
-        printInfo(item);
-        System.out.println("--------------------------------------------------");
-        printInfo(item.getProduct());
-        System.out.println("--------------------------------------------------");
-
-        List<Item> itemList = catalogService.getItemListByProduct("K9-RT-02");
-        for(Item temp : itemList){
-            printInfo(temp);
-        }
-        System.out.println("--------------------------------------------------");
-
-        boolean isItemInStock = catalogService.isItemInStock("EST-26");
-        System.out.println(isItemInStock);
-        System.out.println("--------------------------------------------------");
-    }
+//    @Test
+//    void testItem(){
+//        Item item = catalogService.getItem("EST-18");
+//        printInfo(item);
+//        System.out.println("--------------------------------------------------");
+//        printInfo(item.getProduct());
+//        System.out.println("--------------------------------------------------");
+//
+//        List<Item> itemList = catalogService.getItemListByProduct("K9-RT-02");
+//        for(Item temp : itemList){
+//            printInfo(temp);
+//        }
+//        System.out.println("--------------------------------------------------");
+//
+//        boolean isItemInStock = catalogService.isItemInStock("EST-26");
+//        System.out.println(isItemInStock);
+//        System.out.println("--------------------------------------------------");
+//    }
 
     private void printInfo(Item item){
         System.out.println(item.getProductId()+","+item.getItemId()+","+item.getListPrice()+","+
@@ -118,6 +119,42 @@ class MypetstoreApplicationTests {
         List<Category> categoryList= catalogService.getCategoryList();
         PageInfo<Category> pageInfo = new PageInfo<>(categoryList);
         System.out.print(pageInfo);
+    }
+    @Test
+    void testaddCategory(){
+        Category category = new Category();
+        category.setCategoryId("TIGERS");
+        category.setName("Tigers");
+        category.setDescription("6666666");
+        catalogService.addCategory(category);
+    }
+
+    @Test
+    void testUpdateCategory(){
+        Category category = new Category();
+        category.setCategoryId("TIGERS");
+        category.setName("Tigers");
+        category.setDescription("11111111");
+        catalogService.updateCategory(category);
+    }
+
+    @Test
+    void testDeleteCategory(){
+        String categoryId = "TIGERS";
+        catalogService.deleteCategory(categoryId);
+    }
+    @Test
+    void testAddItem(){
+        Item item = new Item();
+        item.setQuantity(1);
+        item.setAttribute1("222");
+        item.setItemId("BBB");
+        item.setProductId("AV-CB-01");
+        item.setListPrice(new BigDecimal(1));
+        item.setSupplierId(1);
+        item.setStatus("P");
+        catalogService.addItem(item);
+
     }
 
 

@@ -63,4 +63,55 @@
       QTY = QTY - #{increment}
     WHERE ITEMID = #{itemId}
   </update>
+  <insert id="addItem" parameterType="Item">
+        INSERT INTO item
+        VALUES (#{itemId},#{productId},#{listPrice},#{unitCost},#{supplierId},#{status},#{attribute1},#{attribute2},#{attribute3},#{attribute4},#{attribute5})
+    </insert>
+  <insert id="addItemInventory" parameterType="Item">
+        INSERT INTO inventory
+        VALUES (#{itemId},#{quantity})
+    </insert>
+  <update id="updateItem" parameterType="Item">
+        UPDATE item SET
+            productid = #{productId},
+            listprice = #{listPrice},
+            unitcost = #{unitCost},
+            supplier = #{supplierId},
+            status = #{status},
+            attr1 = #{attribute1},
+            attr2 = #{attribute2},
+            attr3 = #{attribute3},
+            attr4 = #{attribute4},
+            attr5 = #{attribute5}
+        WHERE itemid = #{itemId}
+    </update>
+  <update id="updateItemInventory" parameterType="Item">
+        UPDATE inventory set
+            qty = #{quantity}
+        WHERE itemid = #{itemId}
+    </update>
+  <delete id="deleteItem" parameterType="string">
+        DELETE FROM item
+        WHERE itemid = #{itemId}
+    </delete>
+  <delete id="deleteItemInventory" parameterType="string">
+        DELETE FROM inventory
+        WHERE itemid = #{itemId}
+    </delete>
+  <select id="getAllItem" resultType="Item">
+        SELECT
+            ITEMID,
+            LISTPRICE,
+            UNITCOST,
+            SUPPLIER AS supplierId,
+            PRODUCTID,
+            STATUS,
+            ATTR1 AS attribute1,
+            ATTR2 AS attribute2,
+            ATTR3 AS attribute3,
+            ATTR4 AS attribute4,
+            ATTR5 AS attribute5,
+            QTY AS quantity
+        FROM item natural join inventory
+    </select>
 </mapper>
