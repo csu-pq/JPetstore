@@ -112,6 +112,6 @@
             ATTR4 AS attribute4,
             ATTR5 AS attribute5,
             QTY AS quantity
-        FROM item natural join inventory
+        FROM item natural join inventory natural join product
     </select>
 </mapper>
