@@ -154,7 +154,17 @@ class MypetstoreApplicationTests {
         item.setSupplierId(1);
         item.setStatus("P");
         catalogService.addItem(item);
-
+    }
+    @Test
+    void addSupplier(){
+        Supplier supplier = new Supplier();
+        supplier.setSuppid("3");
+        supplier.setUsername("1");
+        supplier.setPassword("000");
+        supplier.setStatus("CA");
+        supplier.setEmail("1111");
+        supplier.setPhone("11111");
+        accountService.insertSupplier(supplier);
     }
 
 

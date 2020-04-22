@@ -1,7 +1,9 @@
 package org.csu.mypetstore.service;
 
 import org.csu.mypetstore.domain.Account;
+import org.csu.mypetstore.domain.Supplier;
 import org.csu.mypetstore.persistence.AccountMapper;
+import org.csu.mypetstore.persistence.SupplierMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +13,8 @@ public class AccountService {
 
     @Autowired
     private AccountMapper accountMapper;
+    @Autowired
+    SupplierMapper supplierMapper;
 
     public Account getAccountByUsername(String username) {
         return accountMapper.getAccountByUsername(username);
@@ -44,5 +48,26 @@ public class AccountService {
         if(account.getPassword() != null && account.getPassword().length() > 0){
             accountMapper.updateSignon(account);
         }
+    }
+    public Supplier getSupplier(String username){
+        return supplierMapper.getSupplierByUsername(username);
+    }
+    public Supplier getSupplier(String username,String password){
+        Supplier supplier=new Supplier();
+        supplier.setUsername(username);
+        supplier.setPassword(password);
+        return supplierMapper.getSupplierByUsernameAndPassword(supplier);
+    }
+    public boolean supplierUsernameIsExist(String username)
+    {
+        return supplierMapper.getSupplierByUsername(username)!=null;
+    }
+    public void insertSupplier(Supplier supplier){
+        supplierMapper.insertSupplier(supplier);
+        supplierMapper.insertSignon(supplier);
+    }
+    public void updateSupplier(Supplier supplier){
+        supplierMapper.updateSupplier(supplier);
+        supplierMapper.updateSignon(supplier);
     }
 }

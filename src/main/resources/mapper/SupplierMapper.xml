@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.csu.mypetstore.persistence.SupplierMapper">
+    <select id="getSupplierByUsername" parameterType="String" resultType="Supplier">
+        SELECT
+            SIGNONSUPPLIER.USERNAME,
+            SUPPLIER.EMAIL,
+            SUPPLIER.PHONE
+        FROM SUPPLIER,SIGNONSUPPLIER
+        WHERE SUPPLIER.USERNAME = #{username}
+            AND SIGNONSUPPLIER.USERNAME = SUPPLIER.USERNAME
+    </select>
+
+    <select id="getSupplierByUsernameAndPassword" parameterType="Supplier" resultType="Supplier">
+        SELECT
+            SIGNONSUPPLIER.USERNAME,
+            SUPPLIER.EMAIL,
+            SUPPLIER.PHONE
+        FROM SUPPLIER,SIGNONSUPPLIER
+        WHERE SUPPLIER.USERNAME = #{username}
+            AND SIGNONSUPPLIER.PASSWORD = #{password}
+            AND SIGNONSUPPLIER.USERNAME = SUPPLIER.USERNAME
+    </select>
+
+    <insert id="insertSupplier" parameterType="SUPPLIER">
+        INSERT INTO SUPPLIER
+            (SUPPID,USERNAME,STATUS,ADDR1,ADDR2,CITY,STATE,ZIP,EMAIL,PHONE)
+        VALUES(#{suppid},#{username},#{status},#{addr1},#{addr2},#{city},#{state},#{zip},#{email},#{phone})
+    </insert>
+    <insert id="insertSignon" parameterType="Supplier">
+        INSERT INTO SIGNONSUPPLIER
+            (PASSWORD,USERNAME)
+        VALUES (#{password}, #{username})
+    </insert>
+    <update id="updateSupplier" parameterType="Supplier">
+        UPDATE SUPPLIER SET
+            EMAIL = #{email},
+            PHONE = #{phone}
+        WHERE USERNAME = #{username}
+    </update>
+    <update id="updateSignon" parameterType="Supplier">
+        UPDATE SIGNONSUPPLIER SET
+            PASSWORD = #{password}
+        WHERE USERNAME = #{username}
+    </update>
+</mapper>

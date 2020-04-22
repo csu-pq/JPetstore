@@ -36,9 +36,9 @@
                         </td>
                         <td th:text="${cartItem.item.product.productId}">
                         </td>
-                        <td th:text="${cartItem.item.attribute1}">
+                        <td th:text="${cartItem.item.attribute1}+${cartItem.item.product.name}">
                         </td>
-                        <td th:name="${cartItem.item.itemId}" th:text="${cartItem.inStock}"></td>
+                        <td id="isEmpty"></td>
                         </td>
                         <td><input type="text" name="quantity" id="quantity" th:value="${cartItem.quantity}"></td>
                         <td th:text="'$'+${cartItem.item.listPrice}"></td>
@@ -67,5 +67,7 @@
     </div>
 </div>
 <footer th:replace="common/bottom"></footer>
+<script type="text/javascript" src="../js/updatePrice.js" charset = "UTF-8"></script>
+<script type="text/javascript" src="../js/checkInventory.js" charset = "UTF-8"></script>
 </body>
 </html>
