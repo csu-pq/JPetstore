@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class AccountService {
 
@@ -70,4 +72,8 @@ public class AccountService {
         supplierMapper.updateSupplier(supplier);
         supplierMapper.updateSignon(supplier);
     }
+
+    public List<Account> getAllAccount() {return accountMapper.getAllAccount(); }
+
+    public void editAccount(Account account) { accountMapper.editAccount(account);}
 }

@@ -163,4 +163,13 @@ public class Account {
     public void setBannerName(String bannerName) {
         this.bannerName = bannerName;
     }
+
+    public static Account parse(SimpleAccount simpleAccount){
+        Account account=new Account();
+        account.setUsername(simpleAccount.getUsername());
+        account.setPassword(simpleAccount.getPassword());
+        account.setAddress1(simpleAccount.getAddress1());
+        account.setAddress2(simpleAccount.getAddress2());
+        return account;
+    }
 }

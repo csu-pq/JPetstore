@@ -79,4 +79,15 @@ public class OrderService {
         sequenceMapper.updateSequence(parameterObject);
         return sequence.getNextId();
     }
+
+    public List<Order> getAllOrder() { return orderMapper.getAllOrder();}
+
+    public List<LineItem> getOrderInfo(int orderId) { return orderMapper.getOrderInfo(orderId);}
+
+    public void changeStatus(int orderId, String status) {
+        Order order=new Order();
+        order.setOrderId(orderId);
+        order.setStatus(status);
+        orderMapper.changeState(order);
+    }
 }

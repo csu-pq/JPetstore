@@ -101,5 +101,21 @@
     INSERT INTO SIGNON (PASSWORD,USERNAME)
     VALUES (#{password}, #{username})
   </insert>
+    <select id="getAllAccount" resultType="Account">
+        SELECT
+            USERID AS USERNAME,
+            SIGNON.PASSWORD,
+            ADDR1 AS ADDRESS1,
+            ADDR2 AS ADDRESS2
+        FROM ACCOUNT,SIGNON
+        WHERE ACCOUNT.USERID=SIGNON.USERNAME
+    </select>
+    <update id="editAccount" parameterType="Account">
+        UPDATE ACCOUNT,SIGNON
+        SET ACCOUNT.ADDR1 = #{address1},
+            ACCOUNT.ADDR2 = #{address2},
+            SIGNON.PASSWORD=#{password}
+        WHERE ACCOUNT.USERID = #{username} AND SIGNON.USERNAME=ACCOUNT.USERID
+    </update>
 
 </mapper>
