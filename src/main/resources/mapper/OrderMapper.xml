@@ -86,7 +86,8 @@
   </insert>
   <select id="getOrderInfo" parameterType="int" resultType="LineItem">
     SELECT
-        ORDERID,
+        LINENUM,
+        ITEMID,
         UNITPRICE,
         QUANTITY
     FROM LINEITEM
@@ -129,4 +130,9 @@
     WHERE ORDERS.ORDERID = ORDERSTATUS.ORDERID
     ORDER BY ORDERDATE
   </select>
+  <update id="sendstatus" parameterType="order">
+    UPDATE ORDERSTATUS
+    SET SENDSTATUS=#{sendstatus}
+    WHERE ORDERID=#{orderId}
+  </update>
 </mapper>

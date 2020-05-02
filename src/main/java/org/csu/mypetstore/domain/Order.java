@@ -36,6 +36,7 @@ public class Order {
     private String cardType;
     private String locale;
     private String status;
+    private int sendstatus;
     private List<LineItem> lineItems = new ArrayList<LineItem>();
 
     public int getOrderId() {
@@ -245,6 +246,9 @@ public class Order {
     public void setStatus(String status) {
         this.status = status;
     }
+    public int getSendstatus() { return sendstatus; }
+
+    public void setSendstatus(int sendstatus) { this.sendstatus = sendstatus; }
 
     public void setLineItems(List<LineItem> lineItems) {
         this.lineItems = lineItems;

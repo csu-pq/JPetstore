@@ -90,4 +90,10 @@ public class OrderService {
         order.setStatus(status);
         orderMapper.changeState(order);
     }
+    public void changeSendStatus(int orderId,int status){
+        Order order=new Order();
+        order.setOrderId(orderId);
+        order.setSendstatus(status);
+        orderMapper.sendstatus(order);
+    }
 }

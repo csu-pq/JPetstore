@@ -40,7 +40,7 @@
 
 ### 1.2.1. 登录验证接口
 
-- 请求路径：login
+- 请求路径：/login
 - 请求方法：post
 - 请求参数
 
@@ -74,12 +74,84 @@
     }
 }
 ```
+##1.2.2注册
+- 请求路径：/register
+- 请求方法：post
+- 请求参数
 
+| 参数名   | 参数说明 | 备注     |
+| -------- | -------- | -------- |
+| username | 用户名   | 不能为空 |
+| password | 密码     | 不能为空 |
+-备注：注册只需账号密码，详细信息在editAccount中设定
+- 响应数据
+```
+{
+    "data": {
+        "username": "admin",
+        "mobile": "123",
+        "email": "123@qq.com",
+        "token": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjUwMCwicmlkIjowLCJpYXQiOjE1MTI1NDQyOTksImV4cCI6MTUxMjYzMDY5OX0.eGrsrvwHm-tPsO9r_pxHIQ5i5L1kX9RX444uwnRGaIM"
+    },
+    "meta": {
+        "msg": "注册成功",
+        "status": 200
+    }
+}
+{
+    "data":null，
+    "meta": {
+        "msg": "账号已存在，注册失败",
+        "status": 422
+    }
+}
+```  
+##1.2.3验证username是否存在
+- 请求路径：/usernameIsExist
+- 请求方法：get
+- 请求参数
+
+| 参数名   | 参数说明 | 备注     |
+| -------- | -------- | -------- |
+| username | 用户名   | 不能为空 |
+- 响应数据
+{
+    "data":null，
+    "meta": {
+        "msg": "账号已存在",
+        "status": 422
+    }
+}
+{
+    "data":null，
+    "meta": {
+        "msg": "账号可行",
+        "status": 200
+    }
+}
 ## 1.3. 用户管理
 
-### 1.3.3. 修改用户状态
+##1.3.1展现买家信息
+-请求路径：account/viewAccount
+-请求方法:get
+-请求参数：无
+-响应数据
+```json
+{
+  "data": {
+    "username": "admin",
+    "password": "123456",
+    "address": "xxxx"
+  },
+  "meta": {
+    "msg": "查询成功",
+    "status": 200
+  }
+}
+ ```
+### 1.3.2. 修改用户（管理员）状态
 
-- 请求路径：users/:uId
+- 请求路径：users/:editSupplier
 - 请求方法：put
 - 请求参数
 
@@ -99,6 +171,22 @@
   },
   "meta": {
     "msg": "设置状态成功",
+    "status": 200
+  }
+}
+```
+##1.3.3修改买家信息
+--备注：通过点击编辑后进行买家信息的密码地址的修改，而后再点击保存提交整个表单，发送到后端一个account型的json数据,然后无论有无修改皆进行set操作,避免修改信息分开操作
+
+-请求路径：account/editAccount
+-请求方法:put
+-请求参数：account
+-响应数据
+```json
+{
+  "data": null,
+  "meta": {
+    "msg": "查询成功",
     "status": 200
   }
 }
@@ -901,7 +989,7 @@ brew install GraphicsMagick
 
 ### 1.10.1. 订单数据列表
 
-- 请求路径：orders
+- 请求路径：/orders
 - 请求方法：get
 - 请求参数
 
@@ -945,7 +1033,7 @@ queryInfo: {
 ```
 ### 1.10.x. 查看订单商品列表
 
-- 请求路径：orders
+- 请求路径：/OrderInfo
 - 请求方法：get
 - 请求参数
 
@@ -960,12 +1048,14 @@ queryInfo: {
     "data": {
         "goods": [
             {
-                item_id:xxx
-                quanty:xxxx
+                itemId:xxx
+                unitprice:xxxx
+                quantity:xxxx
             },
             {
-                item_id:xxx
-                quanty:xxxx
+                itemId:xxx
+                unitprice:xxxx
+                quantity:xxxx
             }
         ]
     },
@@ -975,23 +1065,52 @@ queryInfo: {
     }
 }
 ```
-### 1.10.2. 修改订单是否发货
+### 1.10.2. 修改订单是否付款
 
-- 请求路径：orders/:id
+- 请求路径：orders/changeStatus
 - 请求方法：put
 - 请求参数
 
 | 参数名       | 参数说明     | 备注                                       |
 | ------------ | ------------ | ------------------------------------------ |
-| id           | 订单 ID      | 不能为空`携带在url中`                      |
-| is_send      | 订单是否发货 | 1:已经发货，0:未发货                       |            |
+| id           | 订单 ID      | 不能为空                      |
+| status     | 订单是否发货 | p:已经发货，n:未发货                       |            |
 
 - 请求数据说明
   - 所有请求数据都是增量更新，如果参数不填写，就不会更新该字段
 - 响应数据
 
 ```
+{
+    "data": null,
+    "meta": {
+        "msg": "修改成功",
+        "status": 200
+    }
+}
 ```
+
+### 1.10.3. 修改订单是否发货
+- 请求路径：orders/sendstatus
+- 请求方法：put
+- 请求参数
+
+| 参数名       | 参数说明     | 备注                                       |
+| ------------ | ------------ | ------------------------------------------ |
+| orderId(int)           | 订单 ID      | 不能为空                     |
+| sendstatus(int)      | 订单是否发货 | 1:已经发货，0:未发货                       |            |
+
+- 响应数据
+```
+{
+    "data": null,
+    "meta": {
+        "msg": "修改成功",
+        "status": 200
+    }
+}
+```
+
 ### 1.10.5. 查看物流信息
 
 + 请求路径：/kuaidi/:id

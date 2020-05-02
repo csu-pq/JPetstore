@@ -13,9 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-// TODO 改成RESTFUL的api格式
+
 @RestController
-@RequestMapping("/catalog")
+@RequestMapping("/bms/catalog")
 public class BMSCatalogController {
     @Autowired
     private CatalogService catalogService;

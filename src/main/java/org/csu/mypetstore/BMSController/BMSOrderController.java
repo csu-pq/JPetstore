@@ -33,4 +33,9 @@ public class BMSOrderController {
         orderService.changeStatus(orderId,status);
         return ResultFactory.successResult(null,"修改成功");
     }
+    @PutMapping("/sendstatus")
+    public ResultFactory sendstatus(@RequestParam("orderId")int orderId,@RequestParam("sendstatus")int sendstatus){
+        orderService.changeSendStatus(orderId,sendstatus);
+        return ResultFactory.successResult(null,"修改成功");
+    }
 }
