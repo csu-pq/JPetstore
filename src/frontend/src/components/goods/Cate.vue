@@ -4,7 +4,7 @@
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>商品管理</el-breadcrumb-item>
-      <el-breadcrumb-item>商品分类</el-breadcrumb-item>
+      <el-breadcrumb-item>商品大类</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 卡片视图 -->
     <el-card>
@@ -137,8 +137,7 @@ export default {
   },
   methods: {
     async getCategory () {
-      // `params` 是即将与请求一起发送的 URL 参数
-      const { data: res } = await this.$http.get('catalog/categories', {
+      const { data: res } = await this.$http.get('/catalog/categories', {
         params: this.queryInfo
       })
       console.log(res)
@@ -152,10 +151,9 @@ export default {
     },
     viewProduct (categoryId) {
       this.$router.push({
-        path: `/product/${categoryId}`
+        path: `/Product/${categoryId}`
       })
     },
-    // 监听 pageSizeChange
     handleSizeChange (newSize) {
       this.queryInfo.pagesize = newSize
       this.getCategory()

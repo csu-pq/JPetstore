@@ -6,7 +6,6 @@
         <img src="../assets/logo-topbar.gif" alt="avatar" />
         <span>jPetStore后台管理系统</span>
       </div>
-      <!-- 登录表单 model绑定数据，rules表单验证-->
       <div>
         <el-form
           ref="loginFormRef"
@@ -43,8 +42,8 @@ export default {
   data () {
     return {
       loginForm: {
-        username: '123',
-        password: '11'
+        username: 'asd',
+        password: '111111'
       },
       // 表单验证
       loginFormRules: {
@@ -65,24 +64,15 @@ export default {
       this.$refs.loginFormRef.resetFields()
     },
     login () {
-      // 表单预验证
-      // valid：bool类型,是整个表单验证完之后的结果，表单验证完后将valid的值作为参数传入回调函数并执行回调函数，可以看文档
-      // 当程序跑起来时，一般情况下，应用程序（application program）会时常通过API调用库里所预先备好的函数。但是有些库函数（library function）却要求应用先传给它一个函数，好在合适的时候调用，以完成目标任务。这个被传入的、后又被调用的函数就称为回调函数（callback function）。
       this.$refs.loginFormRef.validate(async valid => {
-        // console.log(valid)，valid为真则继续发送请求。
-        if (!valid) return false
+        if (!valid) return
         const qs = require('qs')
         const { data: res } = await this.$http.post('/account/login', qs.stringify(this.loginForm))
         console.log(res)
         if (res.status !== 200) return this.$message.error('登录失败')
         this.$message.success('登录成功')
-        // 1、将登陆成功之后的token, 保存到客户端的sessionStorage中; localStorage中是持久化的保存
-        //   1.1 项目中出现了登录之外的其他API接口，必须在登陆之后才能访问
-        //   1.2 token 只应在当前网站打开期间生效，所以将token保存在sessionStorage中
-        // TODO window.sessionStorage.setItem('token', res.data.token)
         window.sessionStorage.setItem('user', JSON.stringify(res.data))
-        // 2、通过编程式导航跳转到后台主页, 路由地址为：/home
-        this.$router.push('/home')
+        await this.$router.push('/home')
       })
     },
     goToRegister () {

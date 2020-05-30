@@ -16,7 +16,7 @@
           </el-input>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary" @click="addDialogVisible = true">添加用户(未实现)</el-button>
+          <el-button type="primary" @click="addDialogVisible = true">添加用户</el-button>
         </el-col>
       </el-row>
       <!-- 用户列表区域 -->
@@ -24,15 +24,16 @@
         <!-- stripe: 斑马条纹
         border：边框-->
         <el-table-column type="index" label="#"></el-table-column>
-        <el-table-column label="角色账号" prop="username"></el-table-column>
-        <el-table-column label="角色密码" prop="password"></el-table-column>
+        <el-table-column label="用户账号" prop="username"></el-table-column>
+        <el-table-column label="密码" prop="password"></el-table-column>
         <el-table-column label="地址1" prop="address1" width="150"></el-table-column>
         <el-table-column label="地址2" prop="address2" width="150px"></el-table-column>
         <el-table-column label="手机号" prop="phone"></el-table-column>
+        <el-table-column label="邮箱" prop="email"></el-table-column>
         <el-table-column label="操作" width="300px">
           <template slot-scope="scope">
             <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.$index)">编辑</el-button>
-            <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeUserById(scope.row.id)">删除（未实现）</el-button>
+            <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeUserById(scope.$index)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -63,11 +64,17 @@
         <el-form-item label="密码" prop="password">
           <el-input v-model="addUserForm.password"></el-input>
         </el-form-item>
+        <el-form-item label="地址1" prop="address1">
+        <el-input v-model="addUserForm.address1"></el-input>
+      </el-form-item>
+        <el-form-item label="地址2" prop="address2">
+          <el-input v-model="addUserForm.address2"></el-input>
+        </el-form-item>
+        <el-form-item label="手机" prop="phone">
+          <el-input v-model="addUserForm.phone"></el-input>
+        </el-form-item>
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="addUserForm.email"></el-input>
-        </el-form-item>
-        <el-form-item label="手机" prop="mobile">
-          <el-input v-model="addUserForm.mobile"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -90,7 +97,7 @@
         label-width="70px"
       >
         <el-form-item label="用户名">
-          <el-input v-model="editUserForm.username" disabled></el-input>
+          <el-input v-model="editUserForm.username"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
           <el-input v-model="editUserForm.password"></el-input>
@@ -99,7 +106,13 @@
           <el-input v-model="editUserForm.address1"></el-input>
         </el-form-item>
         <el-form-item label="地址2" prop="address2">
-          <el-input v-model="editUserForm.address2"></el-input>
+        <el-input v-model="editUserForm.address2"></el-input>
+      </el-form-item>
+        <el-form-item label="电话" prop="phone">
+          <el-input v-model="editUserForm.phone"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="editUserForm.email"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -148,10 +161,12 @@ export default {
       addUserForm: {
         username: '',
         password: '',
+        address1:'',
+        address2:'',
         email: '',
-        mobile: ''
+        phone: ''
       },
-      // 用户添加表单验证规则 TODO
+      // 用户添加表单验证规则
       addUserFormRules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -175,28 +190,21 @@ export default {
           { required: true, message: '请输入邮箱', trigger: 'blur' },
           { validator: checkEmail, trigger: 'blur' }
         ],
-        mobile: [
+        phone: [
           { required: true, message: '请输入手机号码', trigger: 'blur' },
           { validator: checkMobile, trigger: 'blur' }
         ]
       },
-      // 修改用户 TODO
+      // 修改用户
       editDialogVisible: false,
-      editUserForm: {},
-      // 编辑用户表单验证 TODO
-      editUserFormRules: {
-        // TODO 我不想验证了
-        // email: [
-        //   { required: true, message: '请输入邮箱', trigger: 'blur' },
-        //   { validator: checkEmail, trigger: 'blur' }
-        // ],
-        // mobile: [
-        //   { required: true, message: '请输入手机号码', trigger: 'blur' },
-        //   { validator: checkMobile, trigger: 'blur' }
-        // ]
-      },
-      // 已选中的角色Id值 好像没啥用
-      selectRoleId: ''
+      editUserForm: {
+        username: '',
+        password: '',
+        address1: '',
+        address2: '',
+        phone:'',
+        email:''
+      }
     }
   },
   created () {
@@ -230,15 +238,16 @@ export default {
     addDialogClosed () {
       this.$refs.addUserFormRef.resetFields()
     },
-    // 添加用户  TODO
+    // 添加用户
     addUser () {
       // 提交请求前，表单预验证
+      console.log(this.addUserForm)
       this.$refs.addUserFormRef.validate(async valid => {
-        // console.log(valid)
-        // 表单预校验失败
         if (!valid) return
-        const { data: res } = await this.$http.post('users', this.addUserForm)
-        if (res.meta.status !== 201) {
+        const qs = require('qs')
+        const { data: res } = await this.$http.post('/account/addAccount', qs.stringify(this.addUserForm))
+        console.log(res)
+        if (res.status !== 200) {
           this.$message.error('添加用户失败！')
         }
         this.$message.success('添加用户成功！')
@@ -253,33 +262,32 @@ export default {
       this.editUserForm.password = this.userList[index].password
       this.editUserForm.address1 = this.userList[index].address1
       this.editUserForm.address2 = this.userList[index].address2
+      this.editUserForm.phone = this.userList[index].phone
+      this.editUserForm.email = this.userList[index].email
       this.editDialogVisible = true
     },
-    // 监听修改用户对话框的关闭事件
     editDialogClosed () {
       this.$refs.editUserFormRef.resetFields()
     },
     // 修改用户信息
     editUser () {
-      // 提交请求前，表单预验证
       this.$refs.editUserFormRef.validate(async valid => {
-        // console.log(valid)
-        // 表单预校验失败
         if (!valid) return
-        const { data: res } = await this.$http.put('/account/editAccount',
-          this.editUserForm
+        const qs = require('qs')
+        const { data: res } = await this.$http.post('/account/editAccount', qs.stringify(this.editUserForm)
         )
         if (res.status !== 200) {
-          this.$message.error('更新用户信息失败！')
+          this.$message.error('修改用户信息失败！')
         }
         // 隐藏添加用户对话框
         this.editDialogVisible = false
-        this.$message.success('更新用户信息成功！')
+        this.$message.success('修改用户信息成功！')
         this.getUserList()
       })
     },
-    // 删除用户 TODO
+    // 删除用户
     async removeUserById (id) {
+      console.log(id)
       const confirmResult = await this.$confirm(
         '此操作将永久删除该用户, 是否继续?',
         '提示',
@@ -289,13 +297,15 @@ export default {
           type: 'warning'
         }
       ).catch(err => err)
-      // 点击确定 返回值为：confirm
-      // 点击取消 返回值为： cancel
       if (confirmResult !== 'confirm') {
         return this.$message.info('已取消删除')
       }
-      const { data: res } = await this.$http.delete('users/' + id)
-      if (res.meta.status !== 200) return this.$message.error('删除用户失败！')
+      const qs = require('qs')
+      const { data: res } = await this.$http.post('/account/deleteAccount', qs.stringify(this.userList[id]))
+      console.log(res)
+      if (res.status !== 200) {
+        this.$message.error('删除用户失败！')
+      }
       this.$message.success('删除用户成功！')
       this.getUserList()
     },

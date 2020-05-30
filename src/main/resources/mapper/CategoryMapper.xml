@@ -25,4 +25,9 @@
     <delete id="deleteCategory" parameterType="string">
         DELETE FROM category where CATID = #{categoryId}
     </delete>
+    <select id="getCategoryList" resultType="Category">
+        select CATID AS categoryId,
+            NAME,
+            DESCN AS description from category
+    </select>
 </mapper>

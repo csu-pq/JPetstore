@@ -21,13 +21,11 @@
           PROFILE.LANGPREF AS languagePreference,
           PROFILE.FAVCATEGORY AS favouriteCategoryId,
           PROFILE.MYLISTOPT AS listOption,
-          PROFILE.BANNEROPT AS bannerOption,
-          BANNERDATA.BANNERNAME
-        FROM ACCOUNT, PROFILE, SIGNON, BANNERDATA
+          PROFILE.BANNEROPT AS bannerOption
+        FROM ACCOUNT, PROFILE, SIGNON
         WHERE ACCOUNT.USERID = #{username}
         AND SIGNON.USERNAME = ACCOUNT.USERID
         AND PROFILE.USERID = ACCOUNT.USERID
-        AND PROFILE.FAVCATEGORY = BANNERDATA.FAVCATEGORY
   </select>
 
     <select id="getAccountByUsernameAndPassword" parameterType="account" resultType="Account">
@@ -47,14 +45,12 @@
       PROFILE.LANGPREF AS languagePreference,
       PROFILE.FAVCATEGORY AS favouriteCategoryId,
       PROFILE.MYLISTOPT AS listOption,
-      PROFILE.BANNEROPT AS bannerOption,
-      BANNERDATA.BANNERNAME
-    FROM ACCOUNT, PROFILE, SIGNON, BANNERDATA
+      PROFILE.BANNEROPT AS bannerOption
+    FROM ACCOUNT, PROFILE, SIGNON
     WHERE ACCOUNT.USERID = #{username}
       AND SIGNON.PASSWORD = #{password}
       AND SIGNON.USERNAME = ACCOUNT.USERID
       AND PROFILE.USERID = ACCOUNT.USERID
-      AND PROFILE.FAVCATEGORY = BANNERDATA.FAVCATEGORY
   </select>
 
     <update id="updateAccount" parameterType="Account">
@@ -106,7 +102,9 @@
             USERID AS USERNAME,
             SIGNON.PASSWORD,
             ADDR1 AS ADDRESS1,
-            ADDR2 AS ADDRESS2
+            ADDR2 AS ADDRESS2,
+            ACCOUNT.PHONE,
+            account.email
         FROM ACCOUNT,SIGNON
         WHERE ACCOUNT.USERID=SIGNON.USERNAME
     </select>
@@ -117,5 +115,13 @@
             SIGNON.PASSWORD=#{password}
         WHERE ACCOUNT.USERID = #{username} AND SIGNON.USERNAME=ACCOUNT.USERID
     </update>
-
+    <delete id="deleteAccount" parameterType="string">
+        delete from account where userid=#{username}
+    </delete>
+    <delete id="deleteSignon" parameterType="string">
+        delete from signon where username=#{username}
+    </delete>
+    <delete id="deleteProfile" parameterType="string">
+        delete from profile where userid=#{username}
+    </delete>
 </mapper>

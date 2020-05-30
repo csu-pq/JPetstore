@@ -35,6 +35,8 @@ public class BMSAccountController {
             Supplier supplier=new Supplier();
             supplier.setUsername(username);
             supplier.setPassword(password);
+            //suppid是主键
+            supplier.setSuppid("5");
             accountService.insertSupplier(supplier);
             return ResultFactory.successResult(accountService.getSupplier(username),"注册成功");
         }
@@ -51,8 +53,12 @@ public class BMSAccountController {
             return ResultFactory.successResult(null,"账号可行");
         }
     }
-    @PutMapping("/editSupplier")    //重复密码用js验证
-    public ResultFactory editSupplier(@RequestBody Supplier supplier){
+    @PostMapping("/editSupplier")
+    public ResultFactory editSupplier(@RequestParam("username") String username,@RequestParam("password") String password,@RequestParam("email") String email,@RequestParam("phone") String phone){
+        Supplier supplier=accountService.getSupplier(username);
+        supplier.setPassword(password);
+        supplier.setEmail(email);
+        supplier.setPhone(phone);
         accountService.updateSupplier(supplier);
         return ResultFactory.successResult(supplier,"成功");
     }
@@ -64,10 +70,40 @@ public class BMSAccountController {
         PageInfo<Account> pageInfo = new PageInfo<>(accountList);
         return ResultFactory.successResult(pageInfo,"查询成功");
     }
-    @PutMapping("/editAccount")
-    public ResultFactory editAccount(@RequestBody SimpleAccount simpleAccount){ //不知道json转化为对象需不需要所有的属性赋值，所以用了一个简单的account对象
-        Account account=Account.parse(simpleAccount);
-        accountService.editAccount(account);
-        return ResultFactory.successResult(simpleAccount,"修改成功");
+    @PostMapping("/editAccount")
+    public ResultFactory editAccount(@RequestParam("username") String username,@RequestParam("password") String password,@RequestParam("address1") String address1,@RequestParam("address2") String address2,@RequestParam("phone") String phone,@RequestParam("email") String email){
+        Account account=accountService.getAccount(username);
+        account.setPassword(password);
+        account.setAddress1(address1);
+        account.setAddress2(address2);
+        account.setPhone(phone);
+        account.setEmail(email);
+        accountService.updateAccount(account);
+        return ResultFactory.successResult(account,"修改成功");
+    }
+    @PostMapping("/addAccount")
+    public ResultFactory addAccount(@RequestParam("username")String username,@RequestParam("password") String password,@RequestParam("address1") String address1,@RequestParam("address2") String address2,@RequestParam("email") String email,@RequestParam("phone") String phone){
+        Account account=accountService.getAccount(username);
+        if(account==null)
+        {
+            Account newAccount=new Account();
+            newAccount.setUsername(username);
+            newAccount.setPassword(password);
+            newAccount.setAddress1(address1);
+            newAccount.setAddress2(address2);
+            newAccount.setEmail(email);
+            newAccount.setPhone(phone);
+            accountService.insertAccount(newAccount);
+            return ResultFactory.successResult(newAccount,"添加成功");
+        }
+        else
+            return ResultFactory.failedResult(50010,"添加失败");
+    }
+    @PostMapping("/deleteAccount")
+    public ResultFactory deleteAccount(@RequestParam("username") String username){
+        Account account=accountService.getAccount(username);
+        if(account!=null)
+        accountService.deleteAccount(username);
+        return ResultFactory.successResult(account,"删除成功");
     }
 }

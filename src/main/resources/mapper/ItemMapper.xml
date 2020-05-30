@@ -42,8 +42,7 @@
       ATTR2 AS attribute2,
       ATTR3 AS attribute3,
       ATTR4 AS attribute4,
-      ATTR5 AS attribute5,
-      QTY AS quantity
+      ATTR5 AS attribute5
     from ITEM I, INVENTORY V, PRODUCT P
     where P.PRODUCTID = I.PRODUCTID
       and I.ITEMID = V.ITEMID
@@ -51,7 +50,7 @@
   </select>
 
     <select id="getInventoryQuantity" parameterType="string" resultType="int">
-    SELECT QTY AS value
+    SELECT QTY AS quantity
     FROM INVENTORY
     WHERE ITEMID = #{itemId}
   </select>

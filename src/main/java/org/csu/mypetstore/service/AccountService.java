@@ -76,4 +76,10 @@ public class AccountService {
     public List<Account> getAllAccount() {return accountMapper.getAllAccount(); }
 
     public void editAccount(Account account) { accountMapper.editAccount(account);}
+
+    public void deleteAccount(String username){
+        accountMapper.deleteAccount(username);
+        accountMapper.deleteSignon(username);
+        accountMapper.deleteProfile(username);
+    }
 }

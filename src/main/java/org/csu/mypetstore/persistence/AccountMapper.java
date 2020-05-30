@@ -27,5 +27,9 @@ public interface AccountMapper {
 
     void editAccount(Account account);
 
+    void deleteAccount(String username);
 
+    void deleteSignon(String username);
+
+    void deleteProfile(String username);
 }

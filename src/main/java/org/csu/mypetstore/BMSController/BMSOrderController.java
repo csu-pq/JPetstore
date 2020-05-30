@@ -28,11 +28,15 @@ public class BMSOrderController {
         List<LineItem> lineItem=orderService.getOrderInfo(orderId);
         return ResultFactory.successResult(lineItem,"查询成功");
     }
-    @PutMapping("/changeStatus")
-    public ResultFactory changeStatus(@RequestParam("orderId")int orderId,@RequestParam("status")String status){
-        orderService.changeStatus(orderId,status);
+    @PostMapping("/changeAddr")
+    public ResultFactory changeAddr(@RequestParam("address1") String address1,@RequestParam("address2")String address2,@RequestParam("id") int id){
+        Order order=orderService.getOrder(id);
+        order.setShipAddress1(address1);
+        order.setShipAddress2(address2);
+        orderService.updateOrderAddr(order);
         return ResultFactory.successResult(null,"修改成功");
     }
+    //发货
     @PutMapping("/sendstatus")
     public ResultFactory sendstatus(@RequestParam("orderId")int orderId,@RequestParam("sendstatus")int sendstatus){
         orderService.changeSendStatus(orderId,sendstatus);

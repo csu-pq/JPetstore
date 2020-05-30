@@ -84,12 +84,10 @@ public class OrderService {
 
     public List<LineItem> getOrderInfo(int orderId) { return orderMapper.getOrderInfo(orderId);}
 
-    public void changeStatus(int orderId, String status) {
-        Order order=new Order();
-        order.setOrderId(orderId);
-        order.setStatus(status);
-        orderMapper.changeState(order);
+    public void updateOrderAddr(Order order) {
+        orderMapper.updateOrderAddr(order);
     }
+    //发货
     public void changeSendStatus(int orderId,int status){
         Order order=new Order();
         order.setOrderId(orderId);

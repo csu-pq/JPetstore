@@ -59,7 +59,6 @@ public class CatalogService {
     public List<Category> getCategoryList() {
         return categoryMapper.getCategoryList();
     }
-    /**************************分割线***********************************/
 
     public void addCategory(Category category){ categoryMapper.addCategory(category); }
 

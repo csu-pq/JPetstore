@@ -4,7 +4,7 @@
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>商品管理</el-breadcrumb-item>
-      <el-breadcrumb-item>商品分类</el-breadcrumb-item>
+      <el-breadcrumb-item>商品大类</el-breadcrumb-item>
       <el-breadcrumb-item>{{this.$route.params.productId}}</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 卡片视图 -->
@@ -34,17 +34,9 @@
           </template>
         </el-table-column>
         <el-table-column label="商品ID" prop="itemId">
-<!--          <template slot-scope="scope">-->
-<!--            <el-link style="color: #006fff" @click="viewItem(scope.row.itemId)">{{scope.row.itemId}}</el-link>-->
-<!--          </template>-->
         </el-table-column>
         <el-table-column label="商品名称" prop="product.name"></el-table-column>
         <el-table-column label="商品描述" prop="attribute1"></el-table-column>
-<!--        <el-table-column label="分级" >-->
-<!--          <template slot>-->
-<!--            <el-tag size="mini" type="warning" >三级</el-tag>-->
-<!--          </template>-->
-<!--        </el-table-column>-->
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditItemDialog(scope.$index,scope.row.supplierId)">编辑</el-button>
@@ -52,7 +44,6 @@
           </template>
         </el-table-column>
       </el-table>
-      <!-- 分页 -->
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -84,7 +75,7 @@
           <el-input v-model="itemForm.unitCost"></el-input>
         </el-form-item>
         <el-form-item label="供应商：" prop="supplierId">
-          <el-input v-model="itemForm.supplierId" :disabled=true></el-input>
+          <el-input v-model="itemForm.supplierId"></el-input>
         </el-form-item>
         <el-form-item label="状态：" prop="status">
           <el-input v-model="itemForm.status"></el-input>
@@ -122,7 +113,7 @@
           <el-input v-model="itemForm.unitCost"></el-input>
         </el-form-item>
         <el-form-item label="供应商：" prop="supplierId">
-          <el-input v-model="itemForm.supplierId" :disabled=true></el-input>
+          <el-input v-model="itemForm.supplierId"></el-input>
         </el-form-item>
         <el-form-item label="状态：" prop="status">
           <el-input v-model="itemForm.status"></el-input>
@@ -235,16 +226,12 @@ export default {
         this.addItemDialogVisible = false
       })
     },
-    // 添加分类 重置表单
     itemDialogClosed () {
       this.itemForm = {}
     },
     // 删除分类
     async removeItem (itemId, supplierId) {
       console.log(itemId, supplierId)
-      // if (supplierId !== JSON.parse(window.sessionStorage.getItem('user')).id) {
-      //   return this.$message.error('你没有权限！')
-      // }
       const confirmResult = await this.$confirm('此操作将永久删除该分类, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -262,7 +249,6 @@ export default {
     },
     // 显示编辑对话框
     async showEditItemDialog (index, supplierId) {
-      // if (supplierId !== JSON.parse(window.sessionStorage.getItem('user')).id) { return this.$message.error('你没有权限！') }
       this.itemForm = this.itemList[index]
       this.itemForm.productId = this.$route.params.productId
       this.editItemDialogVisible = true
@@ -286,11 +272,6 @@ export default {
   .treeTable {
     margin-top: 20px
   }
-  /*.demo-table-expand .el-item-form {*/
-  /*  margin-right: 0;*/
-  /*  margin-bottom: 0;*/
-  /*  width: 25%;*/
-  /*}*/
   .demo-table-expand span {
     width: 90px;
     color: #99a9bf;

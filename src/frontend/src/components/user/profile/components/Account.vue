@@ -10,7 +10,7 @@
       <el-input v-model="userForm.email" />
     </el-form-item>
     <el-form-item label="mobile">
-      <el-input v-model="userForm.mobile" />
+      <el-input v-model="userForm.phone" />
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="submit">Update</el-button>
@@ -20,17 +20,7 @@
 
 <script>
 export default {
-  // props: {
-  //   user: {
-  //     type: Object,
-  //     default: () => {
-  //       return {
-  //         name: '',
-  //         email: ''
-  //       }
-  //     }
-  //   }
-  // },
+
   data () {
     return {
       user: JSON.parse(window.sessionStorage.getItem('user')),
@@ -38,7 +28,7 @@ export default {
         username: '',
         password: '',
         email: '',
-        mobile: ' '
+        phone: ' '
       }
     }
   },
@@ -46,13 +36,14 @@ export default {
     this.userForm.username = this.user.username
     this.userForm.password = this.user.password
     this.userForm.email = this.user.email
-    this.userForm.mobile = this.user.phone
+    this.userForm.phone = this.user.phone
   },
   methods: {
     submit () {
-      // TODO 表单验证
+      const qs = require('qs')
+      this.$http.post('/account/editSupplier', qs.stringify(this.userForm))
       this.$message({
-        message: 'User information has been updated successfully',
+        message: '账号信息更新成功',
         type: 'success',
         duration: 5 * 1000
       })

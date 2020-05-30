@@ -15,6 +15,7 @@
 
     <select id="getSupplierByUsernameAndPassword" parameterType="Supplier" resultType="Supplier">
         SELECT
+            SUPPLIER.SUPPID,
             SIGNONSUPPLIER.USERNAME,
             SUPPLIER.EMAIL,
             SUPPLIER.PHONE
@@ -31,8 +32,8 @@
     </insert>
     <insert id="insertSignon" parameterType="Supplier">
         INSERT INTO SIGNONSUPPLIER
-            (PASSWORD,USERNAME)
-        VALUES (#{password}, #{username})
+            (username,password)
+        VALUES (#{username}, #{password})
     </insert>
     <update id="updateSupplier" parameterType="Supplier">
         UPDATE SUPPLIER SET

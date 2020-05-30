@@ -125,7 +125,8 @@
       ORDERS.ORDERID,
       TOTALPRICE,
       USERID AS username,
-      STATUS
+      STATUS,
+      sendstatus
     FROM ORDERS, ORDERSTATUS
     WHERE ORDERS.ORDERID = ORDERSTATUS.ORDERID
     ORDER BY ORDERDATE
@@ -134,5 +135,11 @@
     UPDATE ORDERSTATUS
     SET SENDSTATUS=#{sendstatus}
     WHERE ORDERID=#{orderId}
+  </update>
+  <update id="updateOrderAddr" parameterType="order">
+    update orders
+    set shipaddr1=#{shipAddress1},
+    shipaddr2=#{shipAddress2}
+    where orderid=#{orderId}
   </update>
 </mapper>

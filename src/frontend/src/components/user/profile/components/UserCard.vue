@@ -1,9 +1,5 @@
 <template>
   <el-card style="margin-bottom:20px;">
-    <div slot="header" class="clearfix">
-      <span>About me</span>
-    </div>
-
     <div class="user-profile">
       <div class="box-center">
 <!--        <pan-thumb :image="user.avatar" :height="'100px'" :width="'100px'" :hoverable="false">-->
@@ -23,7 +19,7 @@
         <div class="user-bio-section-header"><svg-icon icon-class="education" /><span>个人介绍</span></div>
         <div class="user-bio-section-body">
           <div class="text-muted">
-            这个人很懒没有写介绍
+            这个人很懒，什么也没写
           </div>
         </div>
       </div>
@@ -54,46 +50,13 @@
 </template>
 
 <script>
-// import PanThumb from '@/components/PanThumb'
 
 export default {
-  // components: { PanThumb },
   data () {
     return {
       user: {}
     }
   },
-  // props: {
-  //   user: {
-  //     type: Object,
-  //     default: () => {
-  //       return {
-  //         // name: '',
-  //         // email: '',
-  //         // avatar: '',
-  //         // role: '',
-  //         username: '123123',
-  //         password: null,
-  //         email: 'yourname@yourdomain.com',
-  //         firstName: 'ABC',
-  //         lastName: 'XYX',
-  //         status: null,
-  //         address1: '901 San Antonio Road',
-  //         address2: 'MS UCUP02-206',
-  //         city: 'Palo Alto',
-  //         state: 'CA',
-  //         zip: '94303',
-  //         country: '美国',
-  //         phone: '+15555555555',
-  //         favouriteCategoryId: 'CATS',
-  //         languagePreference: 'eng',
-  //         listOption: true,
-  //         bannerOption: true,
-  //         bannerName: ' '
-  //       }
-  //     }
-  //   }
-  // }
   created () {
     this.user = JSON.parse(window.sessionStorage.getItem('user'))
   }

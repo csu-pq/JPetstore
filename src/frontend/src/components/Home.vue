@@ -50,7 +50,7 @@
             <el-menu-item index="/categories" @click="saveNavState('/users')">
               <template slot="title">
                 <i class="el-icon-menu"></i>
-                <span>商品信息</span>
+                <span>商品大类</span>
               </template>
             </el-menu-item>
           </el-submenu>

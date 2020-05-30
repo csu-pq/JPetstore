@@ -22,15 +22,9 @@ public class BMSCatalogController {
 
     @GetMapping("/categories")
     public ResultFactory viewCategory(@RequestParam(value = "pagenum")int pagenum,@RequestParam(value = "pagesize")int pageSize) {
-//        JSONObject data = new JSONObject();
-//        System.out.println(params.toString());
-//        int pageNum = (int)params.get("pagenum");
-//        int pageSize = (int)params.get("pagesize");
         PageHelper.startPage(pagenum, pageSize);
         List<Category> categoryList= catalogService.getCategoryList();
         PageInfo<Category> pageInfo = new PageInfo<>(categoryList);
-//        JSONObject jsonCategory= (JSONObject)pageInfo.toString();
-//        data.put("children",pageInfo);
         return ResultFactory.successResult(pageInfo,"查询成功");
     }
     @GetMapping("/products")
@@ -44,6 +38,12 @@ public class BMSCatalogController {
     public ResultFactory viewItem(@RequestParam(value = "pagenum")int pagenum,@RequestParam(value = "pagesize")int pageSize,@RequestParam(value = "productId")String productId) {
         PageHelper.startPage(pagenum, pageSize);
         List<Item> itemList= catalogService.getItemListByProduct(productId);
+        for(int i=0;i<itemList.size();i++)
+        {
+            String itemid=itemList.get(i).getItemId();
+            int qty=catalogService.getItemInventoryQuantity(itemid);
+            itemList.get(i).setQuantity(qty);
+        }
         PageInfo<Item> pageInfo = new PageInfo<>(itemList);
         return ResultFactory.successResult(pageInfo,"查询成功");
     }
@@ -100,6 +100,8 @@ public class BMSCatalogController {
     public ResultFactory getAllItem(@RequestParam(value = "pagenum")int pagenum,@RequestParam(value = "pagesize")int pageSize){
         PageHelper.startPage(pagenum, pageSize);
         List<Item> itemList = catalogService.getAllItem();
+        System.out.println(itemList.get(0).getQuantity());
+        System.out.println(itemList.get(1).getQuantity());
         PageInfo<Item> pageInfo = new PageInfo<>(itemList);
         return ResultFactory.successResult(pageInfo,"成功");
     }

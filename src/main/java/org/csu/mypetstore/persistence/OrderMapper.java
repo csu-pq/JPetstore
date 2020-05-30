@@ -22,7 +22,7 @@ public interface OrderMapper {
 
     List<LineItem> getOrderInfo(int orderId);
 
-    void changeState(Order order);
+    void updateOrderAddr(Order order);
 
     void sendstatus(Order order);
 }
