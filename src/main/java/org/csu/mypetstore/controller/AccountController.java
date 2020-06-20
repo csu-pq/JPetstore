@@ -43,11 +43,11 @@ public class AccountController {
             session.setAttribute("msg","用户名或密码错误");
             return "account/signOnForm";
         }
-        else if(!inputCode.equals(rightCode))
-        {
-            session.setAttribute("msg","验证码错误");
-            return "account/signOnForm";
-        }
+//        else if(!inputCode.equals(rightCode))
+//        {
+//            session.setAttribute("msg","验证码错误");
+//            return "account/signOnForm";
+//        }
         else
         {
             session.setAttribute("account",account);
@@ -134,6 +134,15 @@ public class AccountController {
             model.addAttribute("account", account);
             return "catalog/main";
         }
+    }
+    @PostMapping("/sendVerificationCode")
+    @ResponseBody
+    public void sendVerificationCode(@RequestParam String phoneNumber, Model model, HttpServletRequest httpServletRequest) {
+
+
+        String code = String.valueOf((int) (Math.random() * 1000000));
+        httpServletRequest.getSession().setAttribute("code", code);
+        System.out.println("成功发送短信给" + phoneNumber + "，验证码为" + code);
     }
 
 }

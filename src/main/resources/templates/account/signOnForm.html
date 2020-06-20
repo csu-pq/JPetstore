@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>MyPetStore</title>
     <link rel="StyleSheet" href="../css/jpetstore.css" type="text/css" media="screen" />
+    <script src="/js/signIn.js" type="text/javascript"></script>
 </head>
 <body>
 <script type="text/javascript">
@@ -27,10 +28,18 @@
                     <td><input type="password" name="password"></td><br/>
                 </tr>
                 <tr>
+                    <td>Phone Number:</td>
+                    <td><input type="text" id="phoneNumber" value="18307331878"/></td>
+                </tr>
+                <tr>
+                    <td><a class="Button" name="sendButton" href="javascript:void(0)" onclick="sendVerificationCode()">send verification code to phone</a></td>
+                </tr>
+                <tr>
                     <td>Verification:</td>
                     <td><input type="text" name="inputCode"></td><br/>
-                    <td><a href=""><img src="/verCode"></a></td>
+                    <td style="display:none;"><a href=""><img src="/verCode"></a></td>
                 </tr>
+
             </table>
             <p th:if="${msg!=null}" th:text="${msg}"></p>
             <input type="submit" value="signOn">
