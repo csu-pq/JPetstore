@@ -146,16 +146,16 @@ export default {
       // 查看订单详细信息对话框
       detailDialogVisible: false,
       addressForm: {
-        id:'',
+        id: '',
         address1: [],
         address2: ''
       },
       addressFormRules: {
         address1: [
-          {required: true, message: '请选择省市区县', trigger: 'blur'}
+          { required: true, message: '请选择省市区县', trigger: 'blur' }
         ],
         address2: [
-          {required: true, message: '请输入详细地址', trigger: 'blur'}
+          { required: true, message: '请输入详细地址', trigger: 'blur' }
         ]
       },
       sendStatusForm: { // TODO
@@ -174,7 +174,7 @@ export default {
   },
   methods: {
     async getOrderList() {
-      const {data: res} = await this.$http.get('order/orders', {
+      const { data: res } = await this.$http.get('order/orders', {
         params: this.queryInfo
       })
       console.log(res)
@@ -186,8 +186,8 @@ export default {
       this.orderList = res.data.list
     },
     async getOrderItem(orderId) {
-      const {data: res} = await this.$http.get('order/orderInfo', {
-        params: {orderId: orderId}
+      const { data: res } = await this.$http.get('order/orderInfo', {
+        params: { orderId: orderId }
       })
       console.log(res)
       this.lineItemList = res.data
@@ -207,7 +207,7 @@ export default {
     },
     showEditDialog(id) {
       this.addressDialogVisible = true
-      this.addressForm.id=id
+      this.addressForm.id = id
     },
     showConfirmSendDialog(orderId) {
       this.sendStatusForm.orderId = orderId
@@ -217,7 +217,7 @@ export default {
     },
     async send() {
       const qs = require('qs')
-      const {data: res} = await this.$http.put('/order/sendstatus', qs.stringify(this.sendStatusForm))
+      const { data: res } = await this.$http.put('/order/sendstatus', qs.stringify(this.sendStatusForm))
       console.log(res)
       if (res.status !== 200) {
         return this.$message.error('发货失败!')
