@@ -81,8 +81,8 @@
   </insert>
 
     <insert id="insertOrderStatus" parameterType="Order">
-    INSERT INTO ORDERSTATUS (ORDERID, LINENUM, TIMESTAMP, STATUS)
-    VALUES (#{orderId,jdbcType=NUMERIC}, #{orderId,jdbcType=NUMERIC}, #{orderDate,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR})
+    INSERT INTO ORDERSTATUS (ORDERID, LINENUM, TIMESTAMP, STATUS,sendstatus)
+    VALUES (#{orderId,jdbcType=NUMERIC}, #{orderId,jdbcType=NUMERIC}, #{orderDate,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR},#{sendstatus})
   </insert>
   <select id="getOrderInfo" parameterType="int" resultType="LineItem">
     SELECT
@@ -121,7 +121,7 @@
       CREDITCARD,
       EXPRDATE AS expiryDate,
       LOCALE,
-      ORDERDATE,
+      orderDate,
       ORDERS.ORDERID,
       TOTALPRICE,
       USERID AS username,

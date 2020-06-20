@@ -14,10 +14,7 @@ import org.thymeleaf.model.IModel;
 
 import javax.jws.WebParam;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/order")
@@ -98,7 +95,6 @@ public class OrderController {
             order.setShipToLastName(account.getLastName());
             order.setShipState(account.getState());
             order.setShipZip(account.getZip());
-
             session.setAttribute("account",account);
             model.addAttribute("order",order);
             session.setAttribute("newOrder",newOrder);
@@ -187,6 +183,12 @@ public class OrderController {
         String cartId=cart.getCartId();
         cart.setTotal(cartService.getCartTotalCost(cartId));
         newOrder.setTotalPrice(cartService.getCartTotalCost(cartId));
+        //0代表未发货
+        newOrder.setSendstatus(0);
+        //订单时间
+        Date date=new Date();
+        newOrder.setOrderDate(date);
+        System.out.println(date);
         orderService.insertOrder(newOrder);
         //删除购物车商品
         List <CartItem>cartItemList=cartService.getCartItemList(cartId);
