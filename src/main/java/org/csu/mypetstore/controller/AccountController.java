@@ -14,7 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.servlet.ModelAndView;
-
+import org.csu.mypetstore.utils.verCode;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -139,8 +139,7 @@ public class AccountController {
     @ResponseBody
     public void sendVerificationCode(@RequestParam String phoneNumber, Model model, HttpServletRequest httpServletRequest) {
 
-
-        String code = String.valueOf((int) (Math.random() * 1000000));
+        String code = String.valueOf((int) (Math.random() * 10000));
         httpServletRequest.getSession().setAttribute("code", code);
         System.out.println("成功发送短信给" + phoneNumber + "，验证码为" + code);
     }

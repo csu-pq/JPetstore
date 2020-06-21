@@ -32,8 +32,14 @@
                     <td><input type="text" id="phoneNumber" value="18374777402"/></td>
                 </tr>
                 <tr>
-                    <td><a class="Button" name="sendButton" href="javascript:void(0)" onclick="sendVerificationCode()">send verification code to phone</a></td>
+                    <td><a id="vercode" class="Button" name="sendButton" href="javascript:void(0)" onclick="sendVerificationCode()">发送验证码</a></td>
                 </tr>
+                <script>
+                    function sendVerificationCode() {
+                        x = document.getElementById("vercode")
+                        x.innerHTML = "已发送验证码，注意查收"
+                    }
+                </script>
                 <tr>
                     <td>Verification:</td>
                     <td><input type="text" name="inputCode"></td><br/>

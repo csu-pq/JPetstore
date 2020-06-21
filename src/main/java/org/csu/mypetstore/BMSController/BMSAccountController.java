@@ -10,6 +10,7 @@ import org.csu.mypetstore.utils.ResultFactory;
 import org.csu.mypetstore.service.AccountService;
 import org.csu.mypetstore.utils.ResultFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
@@ -73,7 +74,7 @@ public class BMSAccountController {
     @PostMapping("/editAccount")
     public ResultFactory editAccount(@RequestParam("username") String username,@RequestParam("password") String password,@RequestParam("address1") String address1,@RequestParam("address2") String address2,@RequestParam("phone") String phone,@RequestParam("email") String email){
         Account account=accountService.getAccount(username);
-        account.setPassword(password);
+        account.setPassword(DigestUtils.md5DigestAsHex(password.getBytes()));
         account.setAddress1(address1);
         account.setAddress2(address2);
         account.setPhone(phone);
@@ -88,7 +89,7 @@ public class BMSAccountController {
         {
             Account newAccount=new Account();
             newAccount.setUsername(username);
-            newAccount.setPassword(password);
+            newAccount.setPassword(DigestUtils.md5DigestAsHex(password.getBytes()));
             newAccount.setAddress1(address1);
             newAccount.setAddress2(address2);
             newAccount.setEmail(email);
