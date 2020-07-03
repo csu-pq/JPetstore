@@ -33,7 +33,22 @@ public class AccountController {
     {
         return "account/signOnForm";
     }
-
+/**
+ * @api {Post} account/signOn
+ * @apiDescription  登陆
+ * @apiName SignOn
+ * @apiParam {String} username 用户名
+ * @apiParam {String} password 密码
+ * @apiParamExample {json} Request-Example:
+ * {
+ *     "username":"123",
+ *     "userAge":123
+ * }
+ * @apiGroup account
+ * @apiSuccess {account} account
+ * @apiError {String} msg 用户名或密码错误
+ * @apiSampleRequest /account
+ */
     @PostMapping("/signOn")
     public String signOn(@SessionAttribute("code")String rightCode, String username, String password, String inputCode,Model model,HttpSession session) {
         Account account = accountService.getAccount(username, DigestUtils.md5DigestAsHex(password.getBytes()));
